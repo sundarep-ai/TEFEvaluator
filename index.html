@@ -16,7 +16,8 @@
     .metric-badge { font-size: .8rem; }
   .feedback pre { white-space: pre-wrap; }
   .feedback { font-size: 1.1rem; line-height: 1.6; }
-  .score-pill { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.5rem; color: #0d6efd; background:#f1f5ff; border:1px solid #dbe4ff; border-radius:.5rem; padding:.25rem .75rem; }
+  .feedback-title { font-size: 1.25rem; font-weight: 700; }
+  .score-center { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 2rem; color: #0d6efd; background:#f1f5ff; border:1px solid #dbe4ff; border-radius:.75rem; padding:.35rem 1rem; }
   </style>
 </head>
 <body>
@@ -196,25 +197,26 @@
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <h2 class="h5 m-0">Evaluating your responses…</h2>
                 <div class="text-end">
+                  <button class="btn btn-sm btn-outline-secondary me-2" id="backToHomeFromEvaluation">Home</button>
                   <span class="badge text-bg-secondary">v<span id="evalAppVersion"></span></span>
                 </div>
               </div>
-              <div class="d-flex align-items-center gap-3 mb-3">
+              <div id="evalSpinner" class="d-flex align-items-center gap-3 mb-3">
                 <div class="spinner-border text-primary" role="status"></div>
                 <div class="text-secondary">This may take up to a minute. We'll show both tasks and your final score when ready.</div>
               </div>
 
-              <div class="d-flex justify-content-end mb-3">
-                <div class="score-pill" id="finalScoreTop">/700</div>
+              <div class="d-flex justify-content-center mb-3">
+                <div class="score-center" id="finalScoreCenter">/700</div>
               </div>
 
               <div class="mb-4">
-                <h3 class="h6">Task A – Judge Feedback</h3>
+                <h3 class="feedback-title">Task A Feedback</h3>
                 <div id="judgeA" class="feedback"></div>
               </div>
 
               <div class="mb-4">
-                <h3 class="h6">Task B – Judge Feedback</h3>
+                <h3 class="feedback-title">Task B Feedback</h3>
                 <div id="judgeB" class="feedback"></div>
               </div>
 
@@ -387,7 +389,9 @@
   $('#evalAppVersion').textContent = $('#appVersion').textContent.replace('v','');
   $('#judgeA').innerHTML = '';
   $('#judgeB').innerHTML = '';
-  $('#finalScoreTop').textContent = '/700';
+  $('#finalScoreCenter').textContent = '/700';
+  const spinnerBox = document.getElementById('evalSpinner');
+  if(spinnerBox) spinnerBox.classList.remove('d-none');
 
       const body = {
         task_a_question: $('#taskAQuestionDisplay').textContent,
@@ -398,15 +402,16 @@
 
       fetch('/api/evaluate/both', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify(body)})
         .then(r => r.json())
-    .then(j => {
+        .then(j => {
           if(j?.taskA?.judge){ renderJudge($('#judgeA'), j.taskA.judge); }
           if(j?.taskB?.judge){ renderJudge($('#judgeB'), j.taskB.judge); }
           if(typeof j?.finalScore === 'number'){
-      $('#finalScoreTop').textContent = `${j.finalScore}/700`;
+            $('#finalScoreCenter').textContent = `${j.finalScore}/700`;
           }
+          if(spinnerBox) spinnerBox.classList.add('d-none');
           loadDashboard();
         })
-        .catch(() => { $('#judgeA').textContent = 'Evaluation failed.'; });
+        .catch(() => { $('#judgeA').textContent = 'Evaluation failed.'; if(spinnerBox) spinnerBox.classList.add('d-none'); });
     };
 
     // Dashboard
@@ -445,6 +450,9 @@
   $('#dashboardBtn').onclick = () => { showOnly('dashboardScreen'); loadDashboard(); };
   $('#refreshDashboard').onclick = loadDashboard;
   $('#backToMainFromDashboard').onclick = () => { showOnly('startScreen'); };
+  // Navigate back to Home from evaluation screen
+  const backHomeBtn = document.getElementById('backToHomeFromEvaluation');
+  if(backHomeBtn){ backHomeBtn.addEventListener('click', () => { showOnly('startScreen'); }); }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

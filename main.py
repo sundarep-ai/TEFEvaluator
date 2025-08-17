@@ -165,33 +165,96 @@ model_flash = settings.ai_model_fast
 # =====================
 from pydantic import BaseModel as _BaseModel
 
+def fully_flatten_pydantic_schema(model: type[BaseModel], nested_title: str = "CategoryFeedback") -> dict:
+    """
+    Fully flatten Pydantic v2 JSON schema:
+    - Replaces $ref with the definition from $defs
+    - Removes $defs and allOf
+    - Sets nested_title for nested objects
+    """
+    raw_schema = model.model_json_schema()
 
-def _resolve(schema: dict, defs: dict):
-    if isinstance(schema, dict):
-        if "$ref" in schema:
-            ref = schema["$ref"]
-            if ref.startswith("#/$defs/"):
-                key = ref.split("#/$defs/")[-1]
-                target = copy.deepcopy(defs.get(key, {}))
-                return _resolve(target, defs)
-        return {k: _resolve(v, defs) for k, v in schema.items()}
-    elif isinstance(schema, list):
-        return [_resolve(v, defs) for v in schema]
-    else:
+    # Grab definitions
+    defs = raw_schema.get("$defs", {})
+
+    def _resolve_refs(schema: dict) -> dict:
+        schema = copy.deepcopy(schema)
+        if isinstance(schema, dict):
+            # Resolve $ref
+            if "$ref" in schema:
+                ref_path = schema.pop("$ref")
+                # In Pydantic v2, refs are like "#/$defs/CategoryFeedback"
+                ref_name = ref_path.split("/")[-1]
+                ref_schema = defs.get(ref_name, {})
+                schema.update(_resolve_refs(ref_schema))
+            
+            # Flatten allOf
+            if "allOf" in schema:
+                merged = {}
+                for subschema in schema.pop("allOf"):
+                    merged.update(_resolve_refs(subschema))
+                schema.update(merged)
+
+            # Recurse
+            for k, v in schema.items():
+                schema[k] = _resolve_refs(v)
+
+            # Set nested title if looks like CategoryFeedback
+            if schema.get("type") == "object" and "properties" in schema:
+                if set(["rating","justification","original","correction","recommendation"]).issubset(schema["properties"].keys()):
+                    schema["title"] = nested_title
+
+        elif isinstance(schema, list):
+            schema = [_resolve_refs(item) for item in schema]
+
         return schema
 
+    flat_schema = _resolve_refs(raw_schema)
+    flat_schema.pop("$defs", None)
+    return flat_schema
 
-def fully_flatten_pydantic_schema(model: type[_BaseModel]) -> dict:
-    raw = model.model_json_schema()
-    defs = raw.get("$defs", {})
-    flat = _resolve(raw, defs)
+def flatten_pydantic_schema(model: type[BaseModel]) -> dict:
+    raw_schema = model.model_json_schema()
+    defs = raw_schema.get("$defs", {})
+
+    def resolve(schema):
+        if isinstance(schema, dict):
+            schema = copy.deepcopy(schema)
+
+            # Resolve $ref
+            if "$ref" in schema:
+                ref_name = schema["$ref"].split("/")[-1]
+                return resolve(defs.get(ref_name, {}))
+
+            # Merge allOf
+            if "allOf" in schema:
+                merged = {}
+                for subschema in schema.pop("allOf"):
+                    merged.update(resolve(subschema))
+                schema.update(merged)
+
+            # Convert prefixItems → items
+            if "prefixItems" in schema:
+                schema["items"] = schema.pop("prefixItems")
+
+            # Recursively process dict
+            for k, v in list(schema.items()):
+                schema[k] = resolve(v)
+
+            # Remove unwanted keys
+            for key in ["$defs", "$ref", "allOf"]:
+                schema.pop(key, None)
+
+            return schema
+
+        elif isinstance(schema, list):
+            return [resolve(item) for item in schema]
+        else:
+            return schema
+
+    flat = resolve(raw_schema)
     flat.pop("$defs", None)
     return flat
-
-
-def flatten_pydantic_schema(model: type[_BaseModel]) -> dict:
-    # Same as fully_flatten for our needs
-    return fully_flatten_pydantic_schema(model)
 
 
 def extract_feedback_df(response, metrics):
