@@ -1,8 +1,0 @@
-# Gemini API Configuration
-GOOGLE_API_KEY=your-gemini-api-key-here
-
-# Security Configuration
-SECRET_KEY=your-super-secret-key-change-this-in-production
-
-# Database Configuration (optional - defaults to SQLite)
-DATABASE_URL=sqlite:///./tef_evaluator.db
