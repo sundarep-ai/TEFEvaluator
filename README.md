@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Bootstrap-5.3.3-purple?logo=bootstrap&style=flat-square">
   <img src="https://img.shields.io/badge/Gemini%20LLM-Vertex%20AI-orange?logo=googlecloud&style=flat-square">
   <br><br>
-  <h1>📝 TEF AI Practice Tool</h1>
+  <h1>📝 TEF AI Practice Tool v0.1.0</h1>
   <p>A professional, responsive web app for practicing the <b>TEF Canada Writing</b> module, powered by Google Gemini LLMs.<br><i>Fast, modern, and ready for your next exam.</i></p>
 </div>
 
