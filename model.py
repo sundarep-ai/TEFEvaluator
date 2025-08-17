@@ -1,6 +1,53 @@
-from typing import List, Optional, Tuple
+from typing import List, Final
 from pydantic import BaseModel, Field
-import copy
+from datetime import datetime
+
+# --- SQLAlchemy (DB models) ---
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
+
+# Read DB URL from app settings
+from config import settings
+
+# SQLite engine/session (simple local file by default)
+SQLALCHEMY_DATABASE_URL = settings.database_url
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(64), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    submissions = relationship("Submission", back_populates="user")
+
+
+class Submission(Base):
+    __tablename__ = "submissions"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    task_a_question = Column(String)
+    task_a_response = Column(String)
+    task_b_question = Column(String)
+    task_b_response = Column(String)
+    rating_a = Column(Float)
+    rating_b = Column(Float)
+    final_score = Column(Integer)
+    judge_a = Column(JSON)
+    judge_b = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    user = relationship("User", back_populates="submissions")
+
+
+def get_db():
+    db: Session = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class CategoryFeedback(BaseModel):

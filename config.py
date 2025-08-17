@@ -5,7 +5,7 @@ from typing import List
 class Settings(BaseSettings):
     # App
     app_name: str = "TEF AI Practice Tool"
-    app_version: str = "0.1.1"
+    app_version: str = "0.1.2"
     host: str = "0.0.0.0"
     port: int = 8000
     debug: bool = True
@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     # We rely on google-genai to read GOOGLE_API_KEY from the environment (.env)
     ai_model_fast: str = "gemini-2.5-flash"
     ai_model_pro: str = "gemini-2.5-pro"
+
+    database_url: str = "sqlite:///./tef.db"
+
+    # Auth / Security
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 120
 
 
 settings = Settings()

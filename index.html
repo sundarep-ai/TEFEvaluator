@@ -14,7 +14,9 @@
     .card-soft { box-shadow: 0 6px 16px rgba(18,38,63,.08); border: 1px solid #edf1f7; }
     .spinner-inline { width: 1.25rem; height: 1.25rem; }
     .metric-badge { font-size: .8rem; }
-    .feedback pre { white-space: pre-wrap; }
+  .feedback pre { white-space: pre-wrap; }
+  .feedback { font-size: 1.1rem; line-height: 1.6; }
+  .score-pill { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.5rem; color: #0d6efd; background:#f1f5ff; border:1px solid #dbe4ff; border-radius:.5rem; padding:.25rem .75rem; }
   </style>
 </head>
 <body>
@@ -26,15 +28,61 @@
   </nav>
 
   <main class="container">
+    <!-- Auth Screen -->
+    <section id="authScreen" class="hero text-center">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          <div class="card card-soft">
+            <div class="card-body p-5">
+              <h1 class="h4 mb-4">Welcome back</h1>
+
+              <div id="authLogin">
+                <div class="text-start">
+                  <div class="mb-2">
+                    <label class="form-label small">Username</label>
+                    <input type="text" class="form-control" id="loginUsername" autocomplete="username">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" autocomplete="current-password">
+                  </div>
+                  <button class="btn btn-primary w-100 mb-2" id="loginBtn">Login</button>
+                  <div class="small text-secondary">Don't have an account? <a href="#" id="toRegisterLink">Create one</a></div>
+                </div>
+              </div>
+
+              <div id="authRegister" class="d-none">
+                <div class="text-start">
+                  <div class="mb-2">
+                    <label class="form-label small">Choose a username</label>
+                    <input type="text" class="form-control" id="regUsername" autocomplete="username">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small">Choose a password</label>
+                    <input type="password" class="form-control" id="regPassword" autocomplete="new-password">
+                  </div>
+                  <button class="btn btn-outline-primary w-100 mb-2" id="registerBtn">Create account</button>
+                  <div class="small text-secondary">Already have an account? <a href="#" id="toLoginLink">Sign in</a></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Start Screen -->
-    <section id="startScreen" class="hero text-center">
+    <section id="startScreen" class="hero text-center d-none">
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="card card-soft">
             <div class="card-body p-5">
               <h1 class="h3 mb-2">Practice Modules</h1>
-              
-              <button class="btn btn-primary btn-lg" id="startWritingBtn">Writing Practice</button>
+              <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-primary btn-lg" id="startWritingBtn">Writing Practice</button>
+                <button class="btn btn-outline-secondary btn-lg" id="dashboardBtn">Dashboard</button>
+              </div>
             </div>
           </div>
         </div>
@@ -43,7 +91,7 @@
 
     <!-- Question Setup -->
     <section id="setupScreen" class="d-none">
-      <div class="row g-4">
+  <div class="row g-4">
         <div class="col-lg-6">
           <div class="card card-soft">
             <div class="card-body">
@@ -71,7 +119,7 @@
       </div>
       <div class="text-end mt-3">
         <button class="btn btn-secondary" id="backToStartBtn">Back</button>
-        <button class="btn btn-primary" id="beginWritingBtn">Begin Writing</button>
+        <button class="btn btn-primary" id="beginWritingBtn" disabled>Begin Writing</button>
       </div>
     </section>
 
@@ -119,6 +167,26 @@
       </div>
     </section>
 
+    <!-- Dashboard Screen -->
+    <section id="dashboardScreen" class="d-none">
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="card card-soft">
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="h5 m-0">Your past submissions</h2>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-secondary" id="backToMainFromDashboard">Back</button>
+                  <button class="btn btn-sm btn-outline-secondary" id="refreshDashboard">Refresh</button>
+                </div>
+              </div>
+              <div id="dashboardList" class="small text-secondary">No submissions yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Evaluation Screen -->
     <section id="evaluationScreen" class="d-none">
       <div class="row g-4">
@@ -133,23 +201,23 @@
               </div>
               <div class="d-flex align-items-center gap-3 mb-3">
                 <div class="spinner-border text-primary" role="status"></div>
-                <div class="text-secondary">This may take up to a minute. Task A will appear first; we’ll show the final score when Task B finishes.</div>
+                <div class="text-secondary">This may take up to a minute. We'll show both tasks and your final score when ready.</div>
+              </div>
+
+              <div class="d-flex justify-content-end mb-3">
+                <div class="score-pill" id="finalScoreTop">/700</div>
               </div>
 
               <div class="mb-4">
                 <h3 class="h6">Task A – Judge Feedback</h3>
-                <div id="judgeA" class="small text-secondary"></div>
+                <div id="judgeA" class="feedback"></div>
               </div>
 
               <div class="mb-4">
                 <h3 class="h6">Task B – Judge Feedback</h3>
-                <div id="judgeB" class="small text-secondary"></div>
+                <div id="judgeB" class="feedback"></div>
               </div>
 
-              <div class="border-top pt-3">
-                <h3 class="h6">Final Score</h3>
-                <div id="finalScore" class="fs-5 fw-semibold"></div>
-              </div>
             </div>
           </div>
         </div>
@@ -160,6 +228,15 @@
   <script>
     const $ = (sel) => document.querySelector(sel);
     const cfg = { writingTimeMinutes: 60, minWordsTaskA: 80, minWordsTaskB: 200 };
+    const state = { token: null, user: null };
+
+    function authHeader(){ return state.token ? { 'Authorization': `Bearer ${state.token}` } : {}; }
+    function showOnly(id){
+      ['authScreen','startScreen','setupScreen','writingScreen','evaluationScreen','dashboardScreen'].forEach(x=>{
+        const el = document.getElementById(x);
+        if(!el) return; if(x===id) el.classList.remove('d-none'); else el.classList.add('d-none');
+      });
+    }
 
     // Load config from backend
     fetch('/api/config').then(r => r.json()).then(data => {
@@ -169,18 +246,51 @@
   $('#appVersion').textContent = `v${data.version}`;
     }).catch(()=>{});
 
+    // Always land on login on app start (no auto-login)
+    (function initAuth(){
+      state.token = null;
+      localStorage.removeItem('token');
+      showOnly('authScreen');
+      showAuth('login');
+    })();
+    // Login/Register toggle
+    function showAuth(mode){
+      const login = document.getElementById('authLogin');
+      const register = document.getElementById('authRegister');
+      if(mode === 'login'){ login.classList.remove('d-none'); register.classList.add('d-none'); }
+      else { register.classList.remove('d-none'); login.classList.add('d-none'); }
+    }
+    document.addEventListener('click', (e)=>{
+      if(e.target && e.target.id === 'toRegisterLink'){ e.preventDefault(); showAuth('register'); }
+      if(e.target && e.target.id === 'toLoginLink'){ e.preventDefault(); showAuth('login'); }
+    });
+
+    // Auth handlers
+    $('#loginBtn').onclick = async () => {
+      const body = { username: $('#loginUsername').value.trim(), password: $('#loginPassword').value };
+      const r = await fetch('/api/auth/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)});
+      const j = await r.json();
+      if(r.ok && j?.access_token){ state.token = j.access_token; localStorage.setItem('token', state.token); const me = await fetch('/api/me', { headers: { ...authHeader() }}).then(x=>x.json()); state.user=me; showOnly('startScreen'); loadDashboard(); } else { alert(j?.detail || 'Login failed'); }
+    };
+    $('#registerBtn').onclick = async () => {
+      const body = { username: $('#regUsername').value.trim(), password: $('#regPassword').value };
+      const r = await fetch('/api/auth/register', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)});
+      const j = await r.json();
+      if(r.ok){ alert('Account created. Please login.'); } else { alert(j?.detail || 'Registration failed'); }
+    };
+
     // Nav
-    $('#startWritingBtn').onclick = () => { $('#startScreen').classList.add('d-none'); $('#setupScreen').classList.remove('d-none'); };
+    $('#startWritingBtn').onclick = () => { showOnly('setupScreen'); };
     $('#backToStartBtn').onclick = () => { $('#setupScreen').classList.add('d-none'); $('#startScreen').classList.remove('d-none'); };
 
     // Generate questions
     $('#genTaskABtn').onclick = async () => {
-      const r = await fetch('/api/question', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({task: 'A'})});
+  const r = await fetch('/api/question', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify({task: 'A'})});
       const j = await r.json();
       $('#taskAQuestion').value = j.question || '';
     };
     $('#genTaskBBtn').onclick = async () => {
-      const r = await fetch('/api/question', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({task: 'B'})});
+  const r = await fetch('/api/question', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify({task: 'B'})});
       const j = await r.json();
       $('#taskBQuestion').value = j.question || '';
     };
@@ -201,9 +311,24 @@
       if(remaining<=0 && timerId){ clearInterval(timerId); timerId=null; }
     }
 
+    // Enable Begin Writing only if both questions exist
+    function updateBeginEnabled(){
+      const hasAq = $('#taskAQuestion').value.trim().length > 0;
+      const hasBq = $('#taskBQuestion').value.trim().length > 0;
+      $('#beginWritingBtn').disabled = !(hasAq && hasBq);
+    }
+    ['input','change'].forEach(e => {
+      $('#taskAQuestion').addEventListener(e, updateBeginEnabled);
+      $('#taskBQuestion').addEventListener(e, updateBeginEnabled);
+    });
+    // Guard on click
     $('#beginWritingBtn').onclick = () => {
-      $('#setupScreen').classList.add('d-none');
-      $('#writingScreen').classList.remove('d-none');
+      updateBeginEnabled();
+      if($('#beginWritingBtn').disabled){
+        alert('Please provide both Task A and Task B questions before beginning to write.');
+        return;
+      }
+      showOnly('writingScreen');
       $('#taskAQuestionDisplay').textContent = $('#taskAQuestion').value.trim();
       $('#taskBQuestionDisplay').textContent = $('#taskBQuestion').value.trim();
       startTimer(cfg.writingTimeMinutes);
@@ -258,42 +383,68 @@
 
     $('#submitBoth').onclick = async () => {
       // Move to evaluation screen
-      $('#writingScreen').classList.add('d-none');
-      $('#evaluationScreen').classList.remove('d-none');
-      $('#evalAppVersion').textContent = $('#appVersion').textContent.replace('v','');
-      $('#judgeA').innerHTML = '';
-      $('#judgeB').innerHTML = '';
-      $('#finalScore').textContent = '';
+  showOnly('evaluationScreen');
+  $('#evalAppVersion').textContent = $('#appVersion').textContent.replace('v','');
+  $('#judgeA').innerHTML = '';
+  $('#judgeB').innerHTML = '';
+  $('#finalScoreTop').textContent = '/700';
 
-      let ratingA = null, ratingB = null;
-
-      const bodyA = {
+      const body = {
         task_a_question: $('#taskAQuestionDisplay').textContent,
-        task_a_response: $('#taskAResponse').value
-      };
-      const bodyB = {
+        task_a_response: $('#taskAResponse').value,
         task_b_question: $('#taskBQuestionDisplay').textContent,
         task_b_response: $('#taskBResponse').value
       };
 
-      // Start both, render A when ready, then B, compute final when both done
-      const pA = fetch('/api/evaluate/task-a', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyA)})
+      fetch('/api/evaluate/both', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify(body)})
         .then(r => r.json())
-        .then(j => { if(j?.judge){ renderJudge($('#judgeA'), j.judge); } ratingA = j?.rating ?? null; })
-        .catch(() => { $('#judgeA').textContent = 'Task A evaluation failed.'; });
-
-      const pB = fetch('/api/evaluate/task-b', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyB)})
-        .then(r => r.json())
-        .then(j => { if(j?.judge){ renderJudge($('#judgeB'), j.judge); } ratingB = j?.rating ?? null; })
-        .catch(() => { $('#judgeB').textContent = 'Task B evaluation failed.'; });
-
-      Promise.allSettled([pA, pB]).then(() => {
-        if(typeof ratingA === 'number' && typeof ratingB === 'number'){
-          const finalScore = Math.round((ratingA * 0.4 + ratingB * 0.6) * 6.99);
-          $('#finalScore').textContent = `${finalScore} / 700`;
-        }
-      });
+    .then(j => {
+          if(j?.taskA?.judge){ renderJudge($('#judgeA'), j.taskA.judge); }
+          if(j?.taskB?.judge){ renderJudge($('#judgeB'), j.taskB.judge); }
+          if(typeof j?.finalScore === 'number'){
+      $('#finalScoreTop').textContent = `${j.finalScore}/700`;
+          }
+          loadDashboard();
+        })
+        .catch(() => { $('#judgeA').textContent = 'Evaluation failed.'; });
     };
+
+    // Dashboard
+    function renderSubmissions(list){
+      if(!Array.isArray(list) || list.length===0){ $('#dashboardList').textContent = 'No submissions yet.'; return; }
+      const html = list.map(s => `
+        <div class="border rounded p-3 mb-3">
+          <div class="d-flex justify-content-between">
+            <div><strong>${new Date(s.created_at).toLocaleString()}</strong></div>
+            <div>Final score: <span class="fw-semibold">${s.final_score ?? '-'}</span></div>
+          </div>
+          <div class="row mt-2 small">
+            <div class="col-md-6">
+              <div class="text-secondary">Task A question</div>
+              <div class="mb-2">${(s.task_a_question||'').replace(/</g,'&lt;')}</div>
+              <div class="text-secondary">Task A response</div>
+              <div class="mb-2">${(s.task_a_response||'').replace(/</g,'&lt;')}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="text-secondary">Task B question</div>
+              <div class="mb-2">${(s.task_b_question||'').replace(/</g,'&lt;')}</div>
+              <div class="text-secondary">Task B response</div>
+              <div class="mb-2">${(s.task_b_response||'').replace(/</g,'&lt;')}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      $('#dashboardList').innerHTML = html;
+    }
+    function loadDashboard(){
+      fetch('/api/submissions', { headers: { ...authHeader() }})
+        .then(r=> r.ok ? r.json() : [])
+        .then(renderSubmissions)
+        .catch(()=>{});
+    }
+  $('#dashboardBtn').onclick = () => { showOnly('dashboardScreen'); loadDashboard(); };
+  $('#refreshDashboard').onclick = loadDashboard;
+  $('#backToMainFromDashboard').onclick = () => { showOnly('startScreen'); };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
