@@ -1,10 +1,18 @@
+
+# Suppress all UserWarnings globally (including Pydantic field shadowing)
+import warnings
+warnings.simplefilter('ignore', UserWarning)
+
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 from typing import Optional, Literal
 
-from dotenv import load_dotenv
+
 from google import genai
 from google.genai import types
 
@@ -21,14 +29,19 @@ from prompt_taskB import (
     judge_system_instruction_taskB, judge_prompt_taskB,
 )
 
+
 import copy
 import json
 import re
 import pandas as pd
 
-load_dotenv()
-
 app = FastAPI(title=settings.app_name, version=settings.app_version)
+from fastapi import Request
+
+# Serve favicon.ico to prevent 404 errors
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse("favicon.ico")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,
@@ -162,6 +175,12 @@ class EvaluateTaskBRequest(BaseModel):
     task_b_question: str
     task_b_response: str
 
+class EvaluateBothRequest(BaseModel):
+    task_a_question: str
+    task_a_response: str
+    task_b_question: str
+    task_b_response: str
+
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
@@ -258,8 +277,6 @@ async def evaluate_task_a(payload: EvaluateTaskARequest):
     )
 
     return {
-        "eval1": json.loads(re.search(r"\{.*\}", resp_eval1_A.text, re.DOTALL).group(0)),
-        "eval2": json.loads(re.search(r"\{.*\}", resp_eval2_A.text, re.DOTALL).group(0)),
         "judge": json.loads(re.search(r"\{.*\}", resp_judge_A.text, re.DOTALL).group(0)),
         "rating": rating_A,
     }
@@ -316,10 +333,120 @@ async def evaluate_task_b(payload: EvaluateTaskBRequest):
         contents=taskB_judge_content,
     )
     return {
-        "eval1": json.loads(re.search(r"\{.*\}", resp_eval1_B.text, re.DOTALL).group(0)),
-        "eval2": json.loads(re.search(r"\{.*\}", resp_eval2_B.text, re.DOTALL).group(0)),
         "judge": json.loads(re.search(r"\{.*\}", resp_judge_B.text, re.DOTALL).group(0)),
         "rating": rating_B,
+    }
+
+
+@app.post("/api/evaluate/both")
+async def evaluate_both(payload: EvaluateBothRequest):
+    # Task A
+    word_count_taskA = len(payload.task_a_response.split())
+    taskA_content_eval1 = eval1_taskA_prompt.format(
+        question=payload.task_a_question,
+        response=payload.task_a_response,
+        word_count=word_count_taskA,
+    )
+    taskA_content_eval2 = eval2_taskA_prompt.format(
+        question=payload.task_a_question,
+        response=payload.task_a_response,
+        word_count=word_count_taskA,
+    )
+    resp_eval1_A = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=eval1_system_instruction_taskA,
+            response_mime_type='application/json',
+            response_schema=output_schema_taskA,
+        ),
+        contents=taskA_content_eval1,
+    )
+    resp_eval2_A = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=eval2_system_instruction_taskA,
+            response_mime_type='application/json',
+            response_schema=output_schema_taskA,
+        ),
+        contents=taskA_content_eval2,
+    )
+    df1A = extract_feedback_df(resp_eval1_A, metrics_taskA)
+    df2A = extract_feedback_df(resp_eval2_A, metrics_taskA)
+    rating_A, justification_A, recommendation_A, originals_A, corrections_A = extract_feedback_summary(df1A, df2A)
+    taskA_judge_content = judge_prompt_taskA.format(
+        justification=justification_A,
+        recommendations=recommendation_A,
+        originals=originals_A,
+        corrections=corrections_A,
+    )
+    resp_judge_A = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=judge_system_instruction_taskA,
+            response_mime_type='application/json',
+            response_schema=flatten_pydantic_schema(TEFJudgeResponse),
+        ),
+        contents=taskA_judge_content,
+    )
+    judge_A = json.loads(re.search(r"\{.*\}", resp_judge_A.text, re.DOTALL).group(0))
+
+    # Task B
+    word_count_taskB = len(payload.task_b_response.split())
+    taskB_content_eval1 = eval1_taskB_prompt.format(
+        question=payload.task_b_question,
+        response=payload.task_b_response,
+        word_count=word_count_taskB,
+    )
+    taskB_content_eval2 = eval2_taskB_prompt.format(
+        question=payload.task_b_question,
+        response=payload.task_b_response,
+        word_count=word_count_taskB,
+    )
+    resp_eval1_B = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=eval1_system_instruction_taskB,
+            response_mime_type='application/json',
+            response_schema=output_schema_taskB,
+        ),
+        contents=taskB_content_eval1,
+    )
+    resp_eval2_B = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=eval2_system_instruction_taskB,
+            response_mime_type='application/json',
+            response_schema=output_schema_taskB,
+        ),
+        contents=taskB_content_eval2,
+    )
+    df1B = extract_feedback_df(resp_eval1_B, metrics_taskB)
+    df2B = extract_feedback_df(resp_eval2_B, metrics_taskB)
+    rating_B, justification_B, recommendation_B, originals_B, corrections_B = extract_feedback_summary(df1B, df2B)
+    taskB_judge_content = judge_prompt_taskB.format(
+        justification=justification_B,
+        recommendations=recommendation_B,
+        originals=originals_B,
+        corrections=corrections_B,
+    )
+    resp_judge_B = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=judge_system_instruction_taskB,
+            response_mime_type='application/json',
+            response_schema=flatten_pydantic_schema(TEFJudgeResponse),
+        ),
+        contents=taskB_judge_content,
+    )
+    judge_B = json.loads(re.search(r"\{.*\}", resp_judge_B.text, re.DOTALL).group(0))
+
+    # Final Score
+    final_score = round((rating_A * 0.4 + rating_B * 0.6) * 6.99)
+
+    return {
+        "final_score": final_score,
+        "taskA": {"judge": judge_A, "rating": rating_A},
+        "taskB": {"judge": judge_B, "rating": rating_B},
     }
 
 

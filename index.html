@@ -10,7 +10,7 @@
     .hero { padding: 48px 0; }
     .timer { font-variant-numeric: tabular-nums; font-weight: 600; }
     .word-count { font-variant-numeric: tabular-nums; }
-    .textarea { min-height: 220px; }
+  .textarea { min-height: 480px !important; resize: vertical; }
     .card-soft { box-shadow: 0 6px 16px rgba(18,38,63,.08); border: 1px solid #edf1f7; }
     .spinner-inline { width: 1.25rem; height: 1.25rem; }
     .metric-badge { font-size: .8rem; }
@@ -33,7 +33,7 @@
           <div class="card card-soft">
             <div class="card-body p-5">
               <h1 class="h3 mb-2">Practice Modules</h1>
-              <p class="text-secondary">Begin with Writing. More modules coming soon.</p>
+              
               <button class="btn btn-primary btn-lg" id="startWritingBtn">Writing Practice</button>
             </div>
           </div>
@@ -52,7 +52,7 @@
                 <button class="btn btn-outline-primary" id="genTaskABtn">AI-generate question</button>
                 <button class="btn btn-outline-secondary" id="clearTaskABtn">Clear</button>
               </div>
-              <textarea class="form-control" id="taskAQuestion" rows="4" placeholder="Paste or generate your Task A question..."></textarea>
+              <textarea class="form-control" id="taskAQuestion" rows="3" style="min-height:150px;" placeholder="Paste or generate your Task A question..."></textarea>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
                 <button class="btn btn-outline-primary" id="genTaskBBtn">AI-generate question</button>
                 <button class="btn btn-outline-secondary" id="clearTaskBBtn">Clear</button>
               </div>
-              <textarea class="form-control" id="taskBQuestion" rows="4" placeholder="Paste or generate your Task B question..."></textarea>
+              <textarea class="form-control" id="taskBQuestion" rows="3" style="min-height:150px;" placeholder="Paste or generate your Task B question..."></textarea>
             </div>
           </div>
         </div>
@@ -75,67 +75,81 @@
       </div>
     </section>
 
-    <!-- Writing Interface -->
+    <!-- Writing Interface (Top/Bottom split) -->
     <section id="writingScreen" class="d-none">
+      <!-- Session timer applies to both tasks -->
+      <div class="mb-3">
+        <div class="alert alert-light border d-flex justify-content-between align-items-center py-2">
+          <div class="fw-semibold">Session time left</div>
+          <div class="timer" id="timer">--:--:--</div>
+        </div>
+      </div>
       <div class="row g-4">
-        <div class="col-lg-6">
+        <div class="col-12">
           <div class="card card-soft h-100">
             <div class="card-body d-flex flex-column">
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <h2 class="h5 m-0">Task A</h2>
-                <div class="text-end small">
-                  <div>Time left: <span class="timer" id="timer">--:--:--</span></div>
-                  <div>Words: <span class="word-count" id="wordCountA">0</span> / <span id="minWordsA">80</span></div>
-                </div>
+                <div class="small">Words: <span class="word-count" id="wordCountA">0</span></div>
               </div>
               <div class="bg-light p-3 rounded border mb-3" id="taskAQuestionDisplay"></div>
               <textarea class="form-control textarea" id="taskAResponse" placeholder="Write your Task A response here..."></textarea>
-              <div class="mt-3 d-flex gap-2 justify-content-end">
-                <button class="btn btn-outline-secondary" id="resetA">Reset</button>
-                <button class="btn btn-primary" id="submitA">Submit Task A</button>
-              </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-6">
+        <!-- horizontal separation -->
+        <div class="col-12"><hr class="my-3"></div>
+        <div class="col-12">
           <div class="card card-soft h-100">
             <div class="card-body d-flex flex-column">
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <h2 class="h5 m-0">Task B</h2>
-                <div class="small">Words: <span class="word-count" id="wordCountB">0</span> / <span id="minWordsB">200</span></div>
+                <div class="small">Words: <span class="word-count" id="wordCountB">0</span></div>
               </div>
               <div class="bg-light p-3 rounded border mb-3" id="taskBQuestionDisplay"></div>
               <textarea class="form-control textarea" id="taskBResponse" placeholder="Write your Task B response here..."></textarea>
-              <div class="mt-3 d-flex gap-2 justify-content-end">
-                <button class="btn btn-outline-secondary" id="resetB">Reset</button>
-                <button class="btn btn-primary" id="submitBoth">Submit Both (A starts, B follows)</button>
-              </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="mt-3 d-flex gap-2 justify-content-end">
+        <button class="btn btn-outline-secondary" id="resetA">Reset A</button>
+        <button class="btn btn-outline-secondary" id="resetB">Reset B</button>
+        <button class="btn btn-primary" id="submitBoth" disabled>Submit</button>
+      </div>
+    </section>
 
-      <!-- Results -->
-      <div class="row g-4 mt-1">
-        <div class="col-lg-6">
+    <!-- Evaluation Screen -->
+    <section id="evaluationScreen" class="d-none">
+      <div class="row g-4">
+        <div class="col-12">
           <div class="card card-soft">
             <div class="card-body">
-              <div class="d-flex align-items-center mb-2">
-                <h3 class="h6 m-0">Task A Results</h3>
-                <div class="ms-2 d-none" id="spinnerA"><div class="spinner-border spinner-inline text-primary" role="status"></div></div>
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="h5 m-0">Evaluating your responses…</h2>
+                <div class="text-end">
+                  <span class="badge text-bg-secondary">v<span id="evalAppVersion"></span></span>
+                </div>
               </div>
-              <div id="resultsA" class="feedback small text-secondary"></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="card card-soft">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-2">
-                <h3 class="h6 m-0">Task B Results</h3>
-                <div class="ms-2 d-none" id="spinnerB"><div class="spinner-border spinner-inline text-primary" role="status"></div></div>
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="spinner-border text-primary" role="status"></div>
+                <div class="text-secondary">This may take up to a minute. Task A will appear first; we’ll show the final score when Task B finishes.</div>
               </div>
-              <div id="resultsB" class="feedback small text-secondary"></div>
+
+              <div class="mb-4">
+                <h3 class="h6">Task A – Judge Feedback</h3>
+                <div id="judgeA" class="small text-secondary"></div>
+              </div>
+
+              <div class="mb-4">
+                <h3 class="h6">Task B – Judge Feedback</h3>
+                <div id="judgeB" class="small text-secondary"></div>
+              </div>
+
+              <div class="border-top pt-3">
+                <h3 class="h6">Final Score</h3>
+                <div id="finalScore" class="fs-5 fw-semibold"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -152,9 +166,7 @@
       cfg.writingTimeMinutes = data.writingTimeMinutes;
       cfg.minWordsTaskA = data.minWordsTaskA;
       cfg.minWordsTaskB = data.minWordsTaskB;
-      $('#appVersion').textContent = `v${data.version}`;
-      $('#minWordsA').textContent = cfg.minWordsTaskA;
-      $('#minWordsB').textContent = cfg.minWordsTaskB;
+  $('#appVersion').textContent = `v${data.version}`;
     }).catch(()=>{});
 
     // Nav
@@ -205,7 +217,7 @@
       $('#wordCountA').textContent = countWords($('#taskAResponse').value);
       $('#wordCountB').textContent = countWords($('#taskBResponse').value);
     }
-    ['input','change'].forEach(e => {
+  ['input','change'].forEach(e => {
       $('#taskAResponse').addEventListener(e, updateCounts);
       $('#taskBResponse').addEventListener(e, updateCounts);
     });
@@ -213,60 +225,74 @@
     $('#resetA').onclick = ()=> { $('#taskAResponse').value=''; updateCounts(); };
     $('#resetB').onclick = ()=> { $('#taskBResponse').value=''; updateCounts(); };
 
-    // Submit flows
-    function renderFeedback(container, data){
-      const pretty = JSON.stringify(data, null, 2);
-      container.innerHTML = `<pre class="mb-0">${pretty}</pre>`;
+    // Enable single Submit when both responses have content
+    function updateSubmitEnabled(){
+      const hasA = $('#taskAResponse').value.trim().length > 0;
+      const hasB = $('#taskBResponse').value.trim().length > 0;
+      $('#submitBoth').disabled = !(hasA && hasB);
+    }
+    ['input','change'].forEach(e => {
+      $('#taskAResponse').addEventListener(e, updateSubmitEnabled);
+      $('#taskBResponse').addEventListener(e, updateSubmitEnabled);
+    });
+    updateSubmitEnabled();
+
+    function renderJudge(container, judge){
+      const just = judge?.justification || '';
+      const rec = judge?.recommendation || '';
+      const originals = Array.isArray(judge?.originals) ? judge.originals : [];
+      const corrections = Array.isArray(judge?.corrections) ? judge.corrections : [];
+      let pairs = [];
+      const n = Math.max(originals.length, corrections.length);
+      for(let i=0;i<n;i++){
+        const o = originals[i] ?? '';
+        const c = corrections[i] ?? '';
+        if(o || c){ pairs.push(`• ${o} → ${c}`); }
+      }
+      container.innerHTML = `
+        <p class="mb-2">${just}</p>
+        <p class="mb-2"><strong>Recommendation:</strong> ${rec}</p>
+        ${pairs.length ? `<div class="mt-2"><strong>Originals → Corrections</strong><br>${pairs.join('<br>')}</div>` : ''}
+      `;
     }
 
-  $('#submitA').onclick = async () => {
-      $('#spinnerA').classList.remove('d-none');
-      $('#resultsA').innerHTML = '';
-      try{
-        const body = {
-          task_a_question: $('#taskAQuestionDisplay').textContent,
-          task_a_response: $('#taskAResponse').value
-        };
-    const r = await fetch('/api/evaluate/task-a', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
-        const j = await r.json();
-    renderFeedback($('#resultsA'), j);
-      }catch(err){
-        $('#resultsA').textContent = 'Error evaluating Task A';
-      } finally {
-        $('#spinnerA').classList.add('d-none');
-      }
-    };
-
     $('#submitBoth').onclick = async () => {
-      $('#spinnerA').classList.remove('d-none');
-      $('#spinnerB').classList.remove('d-none');
-      $('#resultsA').innerHTML = '';
-      $('#resultsB').innerHTML = '';
-      try{
-        // First call Task A endpoint
-        const bodyA = { task_a_question: $('#taskAQuestionDisplay').textContent, task_a_response: $('#taskAResponse').value };
-        const rA = await fetch('/api/evaluate/task-a', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyA)});
-        const jA = await rA.json();
-        renderFeedback($('#resultsA'), jA);
-        $('#spinnerA').classList.add('d-none');
+      // Move to evaluation screen
+      $('#writingScreen').classList.add('d-none');
+      $('#evaluationScreen').classList.remove('d-none');
+      $('#evalAppVersion').textContent = $('#appVersion').textContent.replace('v','');
+      $('#judgeA').innerHTML = '';
+      $('#judgeB').innerHTML = '';
+      $('#finalScore').textContent = '';
 
-        // Then call Task B endpoint
-        const bq = $('#taskBQuestionDisplay').textContent.trim();
-        const br = $('#taskBResponse').value.trim();
-        if(bq && br){
-          const bodyB = { task_b_question: bq, task_b_response: br };
-          const rB = await fetch('/api/evaluate/task-b', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyB)});
-          const jB = await rB.json();
-          renderFeedback($('#resultsB'), jB);
-        } else {
-          $('#resultsB').textContent = 'No Task B input provided.';
+      let ratingA = null, ratingB = null;
+
+      const bodyA = {
+        task_a_question: $('#taskAQuestionDisplay').textContent,
+        task_a_response: $('#taskAResponse').value
+      };
+      const bodyB = {
+        task_b_question: $('#taskBQuestionDisplay').textContent,
+        task_b_response: $('#taskBResponse').value
+      };
+
+      // Start both, render A when ready, then B, compute final when both done
+      const pA = fetch('/api/evaluate/task-a', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyA)})
+        .then(r => r.json())
+        .then(j => { if(j?.judge){ renderJudge($('#judgeA'), j.judge); } ratingA = j?.rating ?? null; })
+        .catch(() => { $('#judgeA').textContent = 'Task A evaluation failed.'; });
+
+      const pB = fetch('/api/evaluate/task-b', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyB)})
+        .then(r => r.json())
+        .then(j => { if(j?.judge){ renderJudge($('#judgeB'), j.judge); } ratingB = j?.rating ?? null; })
+        .catch(() => { $('#judgeB').textContent = 'Task B evaluation failed.'; });
+
+      Promise.allSettled([pA, pB]).then(() => {
+        if(typeof ratingA === 'number' && typeof ratingB === 'number'){
+          const finalScore = Math.round((ratingA * 0.4 + ratingB * 0.6) * 6.99);
+          $('#finalScore').textContent = `${finalScore} / 700`;
         }
-      }catch(err){
-        $('#resultsA').textContent = 'Error evaluating.';
-        $('#resultsB').textContent = '';
-      } finally {
-        $('#spinnerB').classList.add('d-none');
-      }
+      });
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
