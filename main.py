@@ -1,10 +1,18 @@
+
+# Suppress all UserWarnings globally (including Pydantic field shadowing)
+import warnings
+warnings.simplefilter('ignore', UserWarning)
+
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 from typing import Optional, Literal
 
-from dotenv import load_dotenv
+
 from google import genai
 from google.genai import types
 
@@ -21,14 +29,19 @@ from prompt_taskB import (
     judge_system_instruction_taskB, judge_prompt_taskB,
 )
 
+
 import copy
 import json
 import re
 import pandas as pd
 
-load_dotenv()
-
 app = FastAPI(title=settings.app_name, version=settings.app_version)
+from fastapi import Request
+
+# Serve favicon.ico to prevent 404 errors
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse("favicon.ico")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,

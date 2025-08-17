@@ -10,7 +10,7 @@
     .hero { padding: 48px 0; }
     .timer { font-variant-numeric: tabular-nums; font-weight: 600; }
     .word-count { font-variant-numeric: tabular-nums; }
-    .textarea { min-height: 220px; }
+  .textarea { min-height: 480px !important; resize: vertical; }
     .card-soft { box-shadow: 0 6px 16px rgba(18,38,63,.08); border: 1px solid #edf1f7; }
     .spinner-inline { width: 1.25rem; height: 1.25rem; }
     .metric-badge { font-size: .8rem; }
@@ -33,7 +33,7 @@
           <div class="card card-soft">
             <div class="card-body p-5">
               <h1 class="h3 mb-2">Practice Modules</h1>
-              <p class="text-secondary">Begin with Writing. More modules coming soon.</p>
+              
               <button class="btn btn-primary btn-lg" id="startWritingBtn">Writing Practice</button>
             </div>
           </div>
@@ -52,7 +52,7 @@
                 <button class="btn btn-outline-primary" id="genTaskABtn">AI-generate question</button>
                 <button class="btn btn-outline-secondary" id="clearTaskABtn">Clear</button>
               </div>
-              <textarea class="form-control" id="taskAQuestion" rows="4" placeholder="Paste or generate your Task A question..."></textarea>
+              <textarea class="form-control" id="taskAQuestion" rows="3" style="min-height:150px;" placeholder="Paste or generate your Task A question..."></textarea>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
                 <button class="btn btn-outline-primary" id="genTaskBBtn">AI-generate question</button>
                 <button class="btn btn-outline-secondary" id="clearTaskBBtn">Clear</button>
               </div>
-              <textarea class="form-control" id="taskBQuestion" rows="4" placeholder="Paste or generate your Task B question..."></textarea>
+              <textarea class="form-control" id="taskBQuestion" rows="3" style="min-height:150px;" placeholder="Paste or generate your Task B question..."></textarea>
             </div>
           </div>
         </div>
@@ -77,28 +77,34 @@
 
     <!-- Writing Interface (Top/Bottom split) -->
     <section id="writingScreen" class="d-none">
+      <!-- Session timer applies to both tasks -->
+      <div class="mb-3">
+        <div class="alert alert-light border d-flex justify-content-between align-items-center py-2">
+          <div class="fw-semibold">Session time left</div>
+          <div class="timer" id="timer">--:--:--</div>
+        </div>
+      </div>
       <div class="row g-4">
         <div class="col-12">
           <div class="card card-soft h-100">
             <div class="card-body d-flex flex-column">
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <h2 class="h5 m-0">Task A</h2>
-                <div class="text-end small">
-                  <div>Session time left: <span class="timer" id="timer">--:--:--</span></div>
-                  <div>Words: <span class="word-count" id="wordCountA">0</span> / <span id="minWordsA">80</span></div>
-                </div>
+                <div class="small">Words: <span class="word-count" id="wordCountA">0</span></div>
               </div>
               <div class="bg-light p-3 rounded border mb-3" id="taskAQuestionDisplay"></div>
               <textarea class="form-control textarea" id="taskAResponse" placeholder="Write your Task A response here..."></textarea>
             </div>
           </div>
         </div>
+        <!-- horizontal separation -->
+        <div class="col-12"><hr class="my-3"></div>
         <div class="col-12">
           <div class="card card-soft h-100">
             <div class="card-body d-flex flex-column">
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <h2 class="h5 m-0">Task B</h2>
-                <div class="small">Words: <span class="word-count" id="wordCountB">0</span> / <span id="minWordsB">200</span></div>
+                <div class="small">Words: <span class="word-count" id="wordCountB">0</span></div>
               </div>
               <div class="bg-light p-3 rounded border mb-3" id="taskBQuestionDisplay"></div>
               <textarea class="form-control textarea" id="taskBResponse" placeholder="Write your Task B response here..."></textarea>
@@ -160,9 +166,7 @@
       cfg.writingTimeMinutes = data.writingTimeMinutes;
       cfg.minWordsTaskA = data.minWordsTaskA;
       cfg.minWordsTaskB = data.minWordsTaskB;
-      $('#appVersion').textContent = `v${data.version}`;
-      $('#minWordsA').textContent = cfg.minWordsTaskA;
-      $('#minWordsB').textContent = cfg.minWordsTaskB;
+  $('#appVersion').textContent = `v${data.version}`;
     }).catch(()=>{});
 
     // Nav
