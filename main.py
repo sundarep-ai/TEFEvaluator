@@ -413,6 +413,14 @@ def list_submissions(current_user: User = Depends(get_current_user), db: Session
             "task_b_response": s.task_b_response,
             "judge_a": s.judge_a,
             "judge_b": s.judge_b,
+            "justification_a": s.justification_a,
+            "recommendation_a": s.recommendation_a,
+            "originals_a": s.originals_a,
+            "corrections_a": s.corrections_a,
+            "justification_b": s.justification_b,
+            "recommendation_b": s.recommendation_b,
+            "originals_b": s.originals_b,
+            "corrections_b": s.corrections_b,
         }
         for s in subs
     ]
@@ -673,7 +681,7 @@ async def evaluate_both(
 
     final_score = int(round((rating_A * 0.4 + rating_B * 0.6) * 6.99))
 
-    # Persist submission
+    # Persist submission (store Judge LLM justification/recommendation and error analysis)
     sub = Submission(
         user_id=current_user.id,
         task_a_question=payload.task_a_question,
@@ -685,6 +693,14 @@ async def evaluate_both(
         final_score=final_score,
         judge_a=judge_A,
         judge_b=judge_B,
+        justification_a=judge_A.get("justification"),
+        recommendation_a=judge_A.get("recommendation"),
+        originals_a=judge_A.get("originals"),
+        corrections_a=judge_A.get("corrections"),
+        justification_b=judge_B.get("justification"),
+        recommendation_b=judge_B.get("recommendation"),
+        originals_b=judge_B.get("originals"),
+        corrections_b=judge_B.get("corrections"),
     )
     db.add(sub)
     db.commit()

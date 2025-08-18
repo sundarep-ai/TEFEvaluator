@@ -38,6 +38,15 @@ class Submission(Base):
     final_score = Column(Integer)
     judge_a = Column(JSON)
     judge_b = Column(JSON)
+    # New fields for recommendations, justifications, and error analysis
+    justification_a = Column(String)
+    recommendation_a = Column(String)
+    originals_a = Column(JSON)
+    corrections_a = Column(JSON)
+    justification_b = Column(String)
+    recommendation_b = Column(String)
+    originals_b = Column(JSON)
+    corrections_b = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
     user = relationship("User", back_populates="submissions")
 
