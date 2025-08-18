@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
@@ -54,6 +55,18 @@ from prompt_taskB import (
 load_dotenv()
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
+
+# Mount static files (CSS and JS)
+app.mount("/static", StaticFiles(directory="."), name="static")
+
+# Serve individual static files at root level
+@app.get("/styles.css")
+async def get_styles():
+    return FileResponse("styles.css", media_type="text/css")
+
+@app.get("/scripts.js")
+async def get_scripts():
+    return FileResponse("scripts.js", media_type="application/javascript")
 
 # Serve favicon.ico to prevent 404 errors
 @app.get("/favicon.ico")
