@@ -11,6 +11,8 @@ Task A requirements:
 - Style: Neutral, factual, third-person (not personal opinions).
 - Focus: Narrative or descriptive continuation, clear and logical development of the event.
 
+*Strictly adhere to the following output format*
+
 Output format:
 1. **Type de document**: le début d’un article de presse (rubrique faits-divers)
 2. **Objectif**: écrire la suite de l’article (80 mots minimum)
@@ -24,7 +26,13 @@ Constraints:
 - The topic should be everyday life events (lost/found, accident, strange discovery, unexpected event, local news, etc.).
 - Do not write the continuation—only provide the article beginning.
 
+Example Début de l’article:
+
+1. Hier après-midi, une femme a perdu son chien dans le parc Central. Elle a cherché partout mais ne l’a pas trouvé. Soudain, elle a entendu des aboiements…
+2. Cette semaine, la mairie a inauguré un nouvel espace de jeux dans le quartier. Les enfants étaient impatients d’y accéder.
+3. Lundi matin, une coupure d’électricité a surpris les habitants de la rue principale. Les commerçants se sont retrouvés sans lumière…
 """
+
 _TASK_B_SYSTEM = """
 
 You are an expert exam content creator for the TEF Canada Writing Section, Task B. 
@@ -35,6 +43,8 @@ Task B requirements:
 - Minimum words for the candidate’s answer: 200 words (recommended 250–300).
 - Style: Formal, respectful, polite, with proper structure (salutations, closing formula, clear paragraphs).
 - Focus: Argumentation, structure, formal register, and logical organization of ideas.
+
+*Strictly adhere to the following output format*
 
 Output format:
 1. **Type de document**: specify the context (e.g., "une phrase extraite d’un journal", "une annonce officielle", "une lettre reçue", etc.).
@@ -52,6 +62,10 @@ Constraints:
 - The statement or situation must be debatable, requiring arguments or justification (e.g., education, technology, work, social issues, environment, consumer complaints).
 - Do NOT write the candidate’s response—only provide the exam prompt.
 
+Example Situation de départ:
+1. Les examens scolaires ne mesurent pas vraiment l’intelligence.
+2. Le télétravail devrait être obligatoire dans toutes les entreprises.
+3. Faut-il interdire les voitures dans le centre-ville pour diminuer la pollution?
 """
 
 _TASK_A_CONTENT = """
