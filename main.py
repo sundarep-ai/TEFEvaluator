@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
@@ -54,6 +55,18 @@ from prompt_taskB import (
 load_dotenv()
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
+
+# Mount static files (CSS and JS)
+app.mount("/static", StaticFiles(directory="."), name="static")
+
+# Serve individual static files at root level
+@app.get("/styles.css")
+async def get_styles():
+    return FileResponse("styles.css", media_type="text/css")
+
+@app.get("/scripts.js")
+async def get_scripts():
+    return FileResponse("scripts.js", media_type="application/javascript")
 
 # Serve favicon.ico to prevent 404 errors
 @app.get("/favicon.ico")
@@ -346,6 +359,62 @@ class EvaluateBothRequest(BaseModel):
 
 
 # =====================
+# Question Generation (inlined)
+# =====================
+async def generate_task_a_question(client: genai.Client) -> str:
+    """Generate a single Task A (narrative continuation) question using Gemini."""
+    task_a_system = (
+        "You are a TEF exam question generator. Create a concise French prompt for a short narrative continuation task (Task A)."
+    )
+    task_a_content = (
+        "Generate a single Task A prompt in French for a narrative continuation.\n"
+        "Constraints:\n"
+        "- The student should write approximately 80–120 words.\n"
+        "- Keep the scenario modern, everyday-life relevant, and culturally neutral.\n"
+        "- Output only the prompt text, no quotes or extra commentary."
+    )
+    resp = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=task_a_system,
+            response_mime_type="text/plain",
+        ),
+        contents=task_a_content,
+    )
+    text = getattr(resp, "text", "").strip()
+    return text or (
+        "Rédigez un court récit (80–120 mots) à partir de la situation suivante: "
+        "Vous arrivez dans une nouvelle ville et rencontrez votre voisin pour la première fois."
+    )
+
+
+async def generate_task_b_question(client: genai.Client) -> str:
+    """Generate a single Task B (opinion/argumentative letter) question using Gemini."""
+    task_b_system = (
+        "You are a TEF exam question generator. Create a concise French prompt for an opinion/argumentative letter task (Task B)."
+    )
+    task_b_content = (
+        "Generate a single Task B prompt in French for an opinion/argumentative letter.\n"
+        "Constraints:\n"
+        "- The student should write approximately 200–250 words.\n"
+        "- The topic should be contemporary and suitable for general audiences.\n"
+        "- Output only the prompt text, no quotes or extra commentary."
+    )
+    resp = client.models.generate_content(
+        model=model_pro,
+        config=types.GenerateContentConfig(
+            system_instruction=task_b_system,
+            response_mime_type="text/plain",
+        ),
+        contents=task_b_content,
+    )
+    text = getattr(resp, "text", "").strip()
+    return text or (
+        "Écrivez une lettre d’opinion (200–250 mots) sur l’impact du télétravail sur la qualité de vie et la productivité."
+    )
+
+
+# =====================
 # Routes
 # =====================
 @app.get("/", response_class=HTMLResponse)
@@ -430,15 +499,11 @@ def list_submissions(current_user: User = Depends(get_current_user), db: Session
 async def generate_question(
     payload: GenerateQuestionRequest, current_user: User = Depends(get_current_user)
 ):
-    # Simple built-in prompts for MVP
+    # AI-generated questions using Gemini
     if payload.task == "A":
-        question = (
-            "Continue this story in 80-120 words: Vous êtes arrivé dans une nouvelle ville."
-        )
+        question = await generate_task_a_question(client)
     else:
-        question = (
-            "Écrivez une lettre d’opinion (200-250 mots) sur l’importance du télétravail dans la société moderne."
-        )
+        question = await generate_task_b_question(client)
     return {"question": question}
 
 

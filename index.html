@@ -5,70 +5,123 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TEF AI Practice Tool</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { background: #f6f8fb; }
-    .hero { padding: 48px 0; }
-    .timer { font-variant-numeric: tabular-nums; font-weight: 600; }
-    .word-count { font-variant-numeric: tabular-nums; }
-  .textarea { min-height: 480px !important; resize: vertical; }
-    .card-soft { box-shadow: 0 6px 16px rgba(18,38,63,.08); border: 1px solid #edf1f7; }
-    .spinner-inline { width: 1.25rem; height: 1.25rem; }
-    .metric-badge { font-size: .8rem; }
-  .feedback pre { white-space: pre-wrap; }
-  .feedback { font-size: 1.1rem; line-height: 1.6; }
-  .feedback-title { font-size: 1.25rem; font-weight: 700; }
-  .score-center { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 2rem; color: #0d6efd; background:#f1f5ff; border:1px solid #dbe4ff; border-radius:.75rem; padding:.35rem 1rem; }
-  .nav-home-btn { padding: .45rem 1rem; font-weight: 600; }
-  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+<body class="d-flex flex-column min-vh-100">
+  <!-- Brand Header -->
+  <header class="brand-header">
     <div class="container">
-  <a class="navbar-brand fw-semibold" href="#">TEF AI Practice Tool</a>
-  <button class="btn btn-primary ms-3 nav-home-btn d-none" id="navHomeBtn" type="button">Home</button>
-      <span class="text-secondary small ms-auto" id="appVersion"></span>
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="#" class="brand-logo">
+          <div class="logo-icon">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <div>
+            <div style="font-size: 1.5rem; line-height: 1;">TEF AI Practice Tool</div>
+            <div style="font-size: 0.75rem; opacity: 0.8; font-weight: 400;">AI French Writing Evaluator</div>
+          </div>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <button id="themeToggleBtn" type="button" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-sun-fill me-2"></i><span id="themeModeLabel">Light Mode</span>
+          </button>
+          <span class="text-white-50 small" id="appVersion"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn nav-home-btn d-none" id="navHomeBtn" type="button">
+            <i class="bi bi-house-fill me-2"></i>Dashboard
+          </button>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-secondary btn-sm d-none" id="logoutBtn" type="button">
+            <i class="bi bi-box-arrow-right me-1"></i>Sign Out
+          </button>
+        </div>
+      </div>
     </div>
   </nav>
 
-  <main class="container">
+  <main class="flex-grow-1">
     <!-- Auth Screen -->
-    <section id="authScreen" class="hero text-center">
-      <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-          <div class="card card-soft">
-            <div class="card-body p-5">
-              <h1 class="h4 mb-4">Welcome back</h1>
+    <section id="authScreen" class="hero-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-7">
+            <div class="premium-card animate-fade-in">
+              <div class="card-header text-center">
+                <div class="icon-feature icon-primary mx-auto">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <h1 class="h4 mb-2">Welcome to TEF AI Practice Tool</h1>
+                <p class="text-muted mb-0">Your AI French writing evaluator</p>
+              </div>
+              <div class="card-body">
+                <div id="authLogin">
+                  <form>
+                    <div class="mb-3">
+                      <label class="form-label" for="loginUsername">
+                        <i class="bi bi-person me-2"></i>Username
+                      </label>
+                      <input type="text" class="form-control" id="loginUsername" autocomplete="username" placeholder="Enter your username">
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label" for="loginPassword">
+                        <i class="bi bi-lock me-2"></i>Password
+                      </label>
+                      <input type="password" class="form-control" id="loginPassword" autocomplete="current-password" placeholder="Enter your password">
+                    </div>
+                    <button type="button" class="btn btn-primary w-100 mb-3" id="loginBtn">
+                      <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                    </button>
+                  </form>
+                  <div class="text-center">
+                    <span class="text-muted">New to TEF AI? </span>
+                    <a href="#" class="text-decoration-none fw-medium" id="toRegisterLink">Create Account</a>
+                  </div>
+                </div>
 
-              <div id="authLogin">
-                <div class="text-start">
-                  <div class="mb-2">
-                    <label class="form-label small">Username</label>
-                    <input type="text" class="form-control" id="loginUsername" autocomplete="username">
+                <div id="authRegister" class="d-none">
+                  <form>
+                    <div class="mb-3">
+                      <label class="form-label" for="regUsername">
+                        <i class="bi bi-person-plus me-2"></i>Choose Username
+                      </label>
+                      <input type="text" class="form-control" id="regUsername" autocomplete="username" placeholder="Pick a unique username">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="regPassword">
+                        <i class="bi bi-shield-lock me-2"></i>Create Password
+                      </label>
+                      <input type="password" class="form-control" id="regPassword" autocomplete="new-password" placeholder="Choose a secure password">
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label" for="regPassword2">
+                        <i class="bi bi-shield-check me-2"></i>Confirm Password
+                      </label>
+                      <input type="password" class="form-control" id="regPassword2" autocomplete="new-password" placeholder="Confirm your password">
+                    </div>
+                    <button type="button" class="btn btn-success w-100 mb-3" id="registerBtn">
+                      <i class="bi bi-person-plus-fill me-2"></i>Create Account
+                    </button>
+                  </form>
+                  <div class="text-center">
+                    <span class="text-muted">Already have an account? </span>
+                    <a href="#" class="text-decoration-none fw-medium" id="toLoginLink">Sign In</a>
                   </div>
-                  <div class="mb-3">
-                    <label class="form-label small">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" autocomplete="current-password">
-                  </div>
-                  <button class="btn btn-primary w-100 mb-2" id="loginBtn">Login</button>
-                  <div class="small text-secondary">Don't have an account? <a href="#" id="toRegisterLink">Create one</a></div>
                 </div>
               </div>
-
-              <div id="authRegister" class="d-none">
-                <div class="text-start">
-                  <div class="mb-2">
-                    <label class="form-label small">Choose a username</label>
-                    <input type="text" class="form-control" id="regUsername" autocomplete="username">
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label small">Choose a password</label>
-                    <input type="password" class="form-control" id="regPassword" autocomplete="new-password">
-                  </div>
-                  <button class="btn btn-outline-primary w-100 mb-2" id="registerBtn">Create account</button>
-                  <div class="small text-secondary">Already have an account? <a href="#" id="toLoginLink">Sign in</a></div>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>
@@ -76,15 +129,41 @@
     </section>
 
     <!-- Start Screen -->
-    <section id="startScreen" class="hero text-center d-none">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="card card-soft">
-            <div class="card-body p-5">
-              <h1 class="h3 mb-2">Practice Modules</h1>
-              <div class="d-flex justify-content-center gap-3">
-                <button class="btn btn-primary btn-lg" id="startWritingBtn">Writing Practice</button>
-                <button class="btn btn-outline-secondary btn-lg" id="dashboardBtn">Dashboard</button>
+    <section id="startScreen" class="hero-section d-none">
+      <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+          <div class="col-lg-8">
+            <h1 class="display-5 fw-bold mb-3">Master French Writing with AI</h1>
+            <p class="lead text-muted mb-0">Practice TEF writing tasks with intelligent feedback and detailed analysis</p>
+          </div>
+        </div>
+        
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="premium-card h-100">
+              <div class="card-body text-center">
+                <div class="icon-feature icon-primary mx-auto">
+                  <i class="bi bi-pencil-square"></i>
+                </div>
+                <h3 class="h5 mb-3">Writing Practice</h3>
+                <p class="text-muted mb-4">Complete TEF Task A & B with real-time feedback and scoring</p>
+                <button class="btn btn-primary btn-lg w-100" id="startWritingBtn">
+                  <i class="bi bi-play-fill me-2"></i>Start Practice Session
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="premium-card h-100">
+              <div class="card-body text-center">
+                <div class="icon-feature icon-success mx-auto">
+                  <i class="bi bi-graph-up"></i>
+                </div>
+                <h3 class="h5 mb-3">Progress Dashboard</h3>
+                <p class="text-muted mb-4">Review your submissions, scores, and improvement over time</p>
+                <button class="btn btn-outline-primary btn-lg w-100" id="dashboardBtn">
+                  <i class="bi bi-chart-line me-2"></i>View Dashboard
+                </button>
               </div>
             </div>
           </div>
@@ -93,97 +172,191 @@
     </section>
 
     <!-- Question Setup -->
-    <section id="setupScreen" class="d-none">
-  <div class="row g-4">
-        <div class="col-lg-6">
-          <div class="card card-soft">
-            <div class="card-body">
-              <h2 class="h5 mb-3">Task A – Narrative Continuation</h2>
-              <div class="mb-2 d-flex gap-2">
-                <button class="btn btn-outline-primary" id="genTaskABtn">AI-generate question</button>
-                <button class="btn btn-outline-secondary" id="clearTaskABtn">Clear</button>
+    <section id="setupScreen" class="content-section d-none">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="h3 mb-3">Setup Your Practice Session</h2>
+          <p class="lead text-muted">Generate or input questions for both writing tasks</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="premium-card h-100">
+              <div class="card-header">
+                <div class="d-flex align-items-center">
+                  <div class="icon-feature icon-primary me-3" style="width: 40px; height: 40px; font-size: 1.25rem;">
+                    <i class="bi bi-file-text"></i>
+                  </div>
+                  <div>
+                    <h3 class="h5 mb-1">Task A – Narrative Continuation</h3>
+                    <p class="text-muted small mb-0">Write approximately 80-120 words</p>
+                  </div>
+                </div>
               </div>
-              <textarea class="form-control" id="taskAQuestion" rows="3" style="min-height:150px;" placeholder="Paste or generate your Task A question..."></textarea>
+              <div class="card-body">
+                <div class="d-flex gap-2 mb-3">
+                  <button class="btn btn-outline-primary flex-fill" id="genTaskABtn">
+                    <i class="bi bi-magic me-2"></i>AI Generate
+                  </button>
+                  <div id="spinnerTaskA" class="spinner-border spinner-border-sm spinner-primary d-none align-self-center" role="status"></div>
+                  <button class="btn btn-secondary" id="clearTaskABtn">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+                <textarea class="form-control textarea-enhanced" id="taskAQuestion" rows="6" placeholder="Generate an AI question or paste your own Task A prompt here..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-6">
+            <div class="premium-card h-100">
+              <div class="card-header">
+                <div class="d-flex align-items-center">
+                  <div class="icon-feature icon-success me-3" style="width: 40px; height: 40px; font-size: 1.25rem;">
+                    <i class="bi bi-envelope"></i>
+                  </div>
+                  <div>
+                    <h3 class="h5 mb-1">Task B – Formal Letter/Report</h3>
+                    <p class="text-muted small mb-0">Write approximately 200-250 words</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex gap-2 mb-3">
+                  <button class="btn btn-outline-primary flex-fill" id="genTaskBBtn">
+                    <i class="bi bi-magic me-2"></i>AI Generate
+                  </button>
+                  <div id="spinnerTaskB" class="spinner-border spinner-border-sm spinner-primary d-none align-self-center" role="status"></div>
+                  <button class="btn btn-secondary" id="clearTaskBBtn">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+                <textarea class="form-control textarea-enhanced" id="taskBQuestion" rows="6" placeholder="Generate an AI question or paste your own Task B prompt here..."></textarea>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="card card-soft">
-            <div class="card-body">
-              <h2 class="h5 mb-3">Task B – Opinion Letter</h2>
-              <div class="mb-2 d-flex gap-2">
-                <button class="btn btn-outline-primary" id="genTaskBBtn">AI-generate question</button>
-                <button class="btn btn-outline-secondary" id="clearTaskBBtn">Clear</button>
-              </div>
-              <textarea class="form-control" id="taskBQuestion" rows="3" style="min-height:150px;" placeholder="Paste or generate your Task B question..."></textarea>
-            </div>
-          </div>
+        
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <button class="btn btn-secondary" id="backToStartBtn">
+            <i class="bi bi-arrow-left me-2"></i>Back
+          </button>
+          <button class="btn btn-success btn-lg" id="beginWritingBtn" disabled>
+            <i class="bi bi-play-circle-fill me-2"></i>Begin Writing Session
+          </button>
         </div>
-      </div>
-      <div class="text-end mt-3">
-        <button class="btn btn-secondary" id="backToStartBtn">Back</button>
-        <button class="btn btn-primary" id="beginWritingBtn" disabled>Begin Writing</button>
       </div>
     </section>
 
-    <!-- Writing Interface (Top/Bottom split) -->
-    <section id="writingScreen" class="d-none">
-      <!-- Session timer applies to both tasks -->
-      <div class="mb-3">
-        <div class="alert alert-light border d-flex justify-content-between align-items-center py-2">
-          <div class="fw-semibold">Session time left</div>
-          <div class="timer" id="timer">--:--:--</div>
+    <!-- Writing Interface -->
+    <section id="writingScreen" class="content-section d-none">
+      <div class="container">
+        <!-- Session Timer -->
+        <div class="status-timer text-center mb-4">
+          <i class="bi bi-clock-fill me-2"></i>
+          <span>Session Time Remaining: </span>
+          <span id="timer" class="ms-2">--:--:--</span>
         </div>
-      </div>
-      <div class="row g-4">
-        <div class="col-12">
-          <div class="card card-soft h-100">
-            <div class="card-body d-flex flex-column">
-              <div class="d-flex align-items-center justify-content-between mb-3">
-                <h2 class="h5 m-0">Task A</h2>
-                <div class="small">Words: <span class="word-count" id="wordCountA">0</span></div>
+
+        <div class="row g-4">
+          <!-- Task A -->
+          <div class="col-12">
+            <div class="premium-card">
+              <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-feature icon-primary me-3" style="width: 40px; height: 40px; font-size: 1.25rem;">
+                      <i class="bi bi-file-text"></i>
+                    </div>
+                    <h3 class="h5 mb-0">Task A – Narrative Continuation</h3>
+                  </div>
+                  <div class="word-counter">
+                    <i class="bi bi-type me-1"></i>
+                    <span id="wordCountA">0</span> words
+                  </div>
+                </div>
               </div>
-              <div class="bg-light p-3 rounded border mb-3" id="taskAQuestionDisplay"></div>
-              <textarea class="form-control textarea" id="taskAResponse" placeholder="Write your Task A response here..."></textarea>
+              <div class="card-body">
+                <div class="question-display" id="taskAQuestionDisplay"></div>
+                <textarea class="form-control textarea-enhanced" id="taskAResponse" placeholder="Begin writing your Task A response here..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Task B -->
+          <div class="col-12">
+            <div class="premium-card">
+              <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <div class="icon-feature icon-success me-3" style="width: 40px; height: 40px; font-size: 1.25rem;">
+                      <i class="bi bi-envelope"></i>
+                    </div>
+                    <h3 class="h5 mb-0">Task B – Formal Letter/Report</h3>
+                  </div>
+                  <div class="word-counter">
+                    <i class="bi bi-type me-1"></i>
+                    <span id="wordCountB">0</span> words
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="question-display" id="taskBQuestionDisplay"></div>
+                <textarea class="form-control textarea-enhanced" id="taskBResponse" placeholder="Begin writing your Task B response here..."></textarea>
+              </div>
             </div>
           </div>
         </div>
-        <!-- horizontal separation -->
-        <div class="col-12"><hr class="my-3"></div>
-        <div class="col-12">
-          <div class="card card-soft h-100">
-            <div class="card-body d-flex flex-column">
-              <div class="d-flex align-items-center justify-content-between mb-3">
-                <h2 class="h5 m-0">Task B</h2>
-                <div class="small">Words: <span class="word-count" id="wordCountB">0</span></div>
-              </div>
-              <div class="bg-light p-3 rounded border mb-3" id="taskBQuestionDisplay"></div>
-              <textarea class="form-control textarea" id="taskBResponse" placeholder="Write your Task B response here..."></textarea>
-            </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" id="resetA">
+              <i class="bi bi-arrow-clockwise me-2"></i>Reset Task A
+            </button>
+            <button class="btn btn-outline-secondary" id="resetB">
+              <i class="bi bi-arrow-clockwise me-2"></i>Reset Task B
+            </button>
           </div>
+          <button class="btn btn-success btn-lg" id="submitBoth" disabled>
+            <i class="bi bi-send-fill me-2"></i>Submit for Evaluation
+          </button>
         </div>
-      </div>
-      <div class="mt-3 d-flex gap-2 justify-content-end">
-        <button class="btn btn-outline-secondary" id="resetA">Reset A</button>
-        <button class="btn btn-outline-secondary" id="resetB">Reset B</button>
-        <button class="btn btn-primary" id="submitBoth" disabled>Submit</button>
       </div>
     </section>
 
     <!-- Dashboard Screen -->
-    <section id="dashboardScreen" class="d-none">
-      <div class="row g-4">
-        <div class="col-12">
-          <div class="card card-soft">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-between mb-3">
-                <h2 class="h5 m-0">Your past submissions</h2>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-secondary" id="backToMainFromDashboard">Back</button>
-                  <button class="btn btn-sm btn-outline-secondary" id="refreshDashboard">Refresh</button>
-                </div>
+    <section id="dashboardScreen" class="content-section d-none">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h2 class="h3 mb-2">Your Progress Dashboard</h2>
+            <p class="text-muted mb-0">Review your writing submissions and track improvement</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" id="backToMainFromDashboard">
+              <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <button class="btn btn-primary" id="refreshDashboard">
+              <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="premium-card">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon-feature icon-success me-3" style="width: 40px; height: 40px; font-size: 1.25rem;">
+                <i class="bi bi-list-ul"></i>
               </div>
-              <div id="dashboardList" class="small text-secondary">No submissions yet.</div>
+              <h3 class="h5 mb-0">Submission History</h3>
+            </div>
+            <div id="dashboardList">
+              <div class="text-center py-5">
+                <div class="icon-feature icon-warning mx-auto mb-3">
+                  <i class="bi bi-inbox"></i>
+                </div>
+                <p class="text-muted">No submissions yet. Start your first practice session!</p>
+              </div>
             </div>
           </div>
         </div>
@@ -191,369 +364,81 @@
     </section>
 
     <!-- Evaluation Screen -->
-    <section id="evaluationScreen" class="d-none">
-      <div class="row g-4">
-        <div class="col-12">
-          <div class="card card-soft">
-            <div class="card-body">
-              <div class="d-flex align-items-center justify-content-between mb-3">
-                <h2 class="h5 m-0" id="evaluationHeaderTitle">Evaluating your responses…</h2>
-                <div class="text-end">
-                  <button class="btn btn-sm btn-outline-secondary me-2" id="backToHomeFromEvaluation">Home</button>
-                </div>
-              </div>
-              <div id="evalSpinner" class="d-flex align-items-center gap-3 mb-3">
-                <div class="spinner-border text-primary" role="status"></div>
-                <div class="text-secondary">This may take up to 5 minutes for accurate evaluation. Thank you for your patience!</div>
-              </div>
+    <section id="evaluationScreen" class="content-section d-none">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="h3 mb-2" id="evaluationHeaderTitle">AI Evaluation in Progress</h2>
+          <p class="text-muted">Your responses are being analyzed by an advanced AI system</p>
+        </div>
 
-              <div class="d-flex justify-content-center mb-3">
-                <div class="score-center" id="finalScoreCenter">/700</div>
-              </div>
+        <div id="evalSpinner" class="text-center mb-5">
+          <div class="spinner-border spinner-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+          <p class="text-muted">This comprehensive evaluation may take up to 5 minutes. Please be patient while we provide detailed feedback.</p>
+        </div>
 
-              <div class="mb-4">
-                <h3 class="feedback-title">Task A Feedback</h3>
-                <div id="judgeA" class="feedback"></div>
-              </div>
+        <div class="text-center mb-5">
+          <div class="score-display mx-auto" style="max-width: 300px;" id="finalScoreCenter">
+            /700
+          </div>
+          <p class="text-muted mt-2">Overall TEF Score</p>
+        </div>
 
-              <div class="mb-4">
-                <h3 class="feedback-title">Task B Feedback</h3>
-                <div id="judgeB" class="feedback"></div>
-              </div>
-
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="feedback-section">
+              <h3 class="feedback-title">
+                <i class="bi bi-file-text"></i>
+                Task A Feedback
+              </h3>
+              <div id="judgeA" class="feedback-content"></div>
             </div>
           </div>
+          <div class="col-lg-6">
+            <div class="feedback-section">
+              <h3 class="feedback-title">
+                <i class="bi bi-envelope"></i>
+                Task B Feedback
+              </h3>
+              <div id="judgeB" class="feedback-content"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-primary" id="backToHomeFromEvaluation">
+            <i class="bi bi-house-fill me-2"></i>Return to Dashboard
+          </button>
         </div>
       </div>
     </section>
   </main>
 
-  <script>
-    const $ = (sel) => document.querySelector(sel);
-    const cfg = { writingTimeMinutes: 60, minWordsTaskA: 80, minWordsTaskB: 200 };
-    const state = { token: null, user: null };
-
-    function authHeader(){ return state.token ? { 'Authorization': `Bearer ${state.token}` } : {}; }
-    function showOnly(id){
-      ['authScreen','startScreen','setupScreen','writingScreen','evaluationScreen','dashboardScreen'].forEach(x=>{
-        const el = document.getElementById(x);
-        if(!el) return; if(x===id) el.classList.remove('d-none'); else el.classList.add('d-none');
-      });
-    }
-
-    // Load config from backend
-    fetch('/api/config').then(r => r.json()).then(data => {
-      cfg.writingTimeMinutes = data.writingTimeMinutes;
-      cfg.minWordsTaskA = data.minWordsTaskA;
-      cfg.minWordsTaskB = data.minWordsTaskB;
-  $('#appVersion').textContent = `v${data.version}`;
-    }).catch(()=>{});
-  // Global nav Home button -> Start screen (only when authenticated)
-  const navHome = document.getElementById('navHomeBtn');
-  if(navHome){ navHome.addEventListener('click', () => { if(state.token){ showOnly('startScreen'); } else { showOnly('authScreen'); } }); }
-
-
-    // Always land on login on app start (no auto-login)
-    (function initAuth(){
-      state.token = null;
-      localStorage.removeItem('token');
-      showOnly('authScreen');
-      showAuth('login');
-  // Ensure Home stays hidden until logged in
-  const navHomeBtnEl = document.getElementById('navHomeBtn');
-  if(navHomeBtnEl){ navHomeBtnEl.classList.add('d-none'); }
-    })();
-    // Login/Register toggle
-    function showAuth(mode){
-      const login = document.getElementById('authLogin');
-      const register = document.getElementById('authRegister');
-      if(mode === 'login'){ login.classList.remove('d-none'); register.classList.add('d-none'); }
-      else { register.classList.remove('d-none'); login.classList.add('d-none'); }
-    }
-    document.addEventListener('click', (e)=>{
-      if(e.target && e.target.id === 'toRegisterLink'){ e.preventDefault(); showAuth('register'); }
-      if(e.target && e.target.id === 'toLoginLink'){ e.preventDefault(); showAuth('login'); }
-    });
-
-    // Auth handlers
-    $('#loginBtn').onclick = async () => {
-      const body = { username: $('#loginUsername').value.trim(), password: $('#loginPassword').value };
-      const r = await fetch('/api/auth/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)});
-      const j = await r.json();
-      if(r.ok && j?.access_token){
-        state.token = j.access_token; localStorage.setItem('token', state.token);
-        const me = await fetch('/api/me', { headers: { ...authHeader() }}).then(x=>x.json());
-        state.user=me;
-        const navHomeBtnEl = document.getElementById('navHomeBtn');
-        if(navHomeBtnEl){ navHomeBtnEl.classList.remove('d-none'); }
-        showOnly('startScreen');
-        loadDashboard();
-      } else { alert(j?.detail || 'Login failed'); }
-    };
-    $('#registerBtn').onclick = async () => {
-      const body = { username: $('#regUsername').value.trim(), password: $('#regPassword').value };
-      const r = await fetch('/api/auth/register', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)});
-      const j = await r.json();
-      if(r.ok){ alert('Account created. Please login.'); } else { alert(j?.detail || 'Registration failed'); }
-    };
-
-    // Nav
-    function resetWritingFlow(){
-      // Clear questions
-      const qa = $('#taskAQuestion');
-      const qb = $('#taskBQuestion');
-      if(qa) qa.value = '';
-      if(qb) qb.value = '';
-
-      // Clear responses
-      const ra = $('#taskAResponse');
-      const rb = $('#taskBResponse');
-      if(ra) ra.value = '';
-      if(rb) rb.value = '';
-
-      // Reset displays and counters
-      const qda = $('#taskAQuestionDisplay');
-      const qdb = $('#taskBQuestionDisplay');
-      if(qda) qda.textContent = '';
-      if(qdb) qdb.textContent = '';
-      const wca = $('#wordCountA');
-      const wcb = $('#wordCountB');
-      if(wca) wca.textContent = '0';
-      if(wcb) wcb.textContent = '0';
-
-      // Disable buttons
-      const beginBtn = $('#beginWritingBtn');
-      if(beginBtn) beginBtn.disabled = true;
-      const submitBtn = $('#submitBoth');
-      if(submitBtn) submitBtn.disabled = true;
-
-      // Stop and reset timer
-      if(timerId){ clearInterval(timerId); timerId = null; }
-      endAt = null;
-      const timerEl = $('#timer');
-      if(timerEl) timerEl.textContent = '--:--:--';
-
-      // Ensure derived states stay consistent
-      if(typeof updateBeginEnabled === 'function') updateBeginEnabled();
-      if(typeof updateCounts === 'function') updateCounts();
-      if(typeof updateSubmitEnabled === 'function') updateSubmitEnabled();
-    }
-
-    $('#startWritingBtn').onclick = () => { resetWritingFlow(); showOnly('setupScreen'); };
-    $('#backToStartBtn').onclick = () => { $('#setupScreen').classList.add('d-none'); $('#startScreen').classList.remove('d-none'); };
-
-    // Generate questions
-    $('#genTaskABtn').onclick = async () => {
-  const r = await fetch('/api/question', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify({task: 'A'})});
-      const j = await r.json();
-      $('#taskAQuestion').value = j.question || '';
-    };
-    $('#genTaskBBtn').onclick = async () => {
-  const r = await fetch('/api/question', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify({task: 'B'})});
-      const j = await r.json();
-      $('#taskBQuestion').value = j.question || '';
-    };
-    $('#clearTaskABtn').onclick = ()=> $('#taskAQuestion').value='';
-    $('#clearTaskBBtn').onclick = ()=> $('#taskBQuestion').value='';
-
-    // Begin writing
-    let timerId = null; let endAt = null;
-    function startTimer(minutes){
-      endAt = Date.now() + minutes*60*1000;
-      renderTimer();
-      timerId = setInterval(renderTimer, 1000);
-    }
-    function renderTimer(){
-      const remaining = Math.max(0, endAt - Date.now());
-      const s = Math.floor(remaining/1000); const h = Math.floor(s/3600); const m = Math.floor((s%3600)/60); const sec = s%60;
-      $('#timer').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-      if(remaining<=0 && timerId){ clearInterval(timerId); timerId=null; }
-    }
-
-    // Enable Begin Writing only if both questions exist
-    function updateBeginEnabled(){
-      const hasAq = $('#taskAQuestion').value.trim().length > 0;
-      const hasBq = $('#taskBQuestion').value.trim().length > 0;
-      $('#beginWritingBtn').disabled = !(hasAq && hasBq);
-    }
-    ['input','change'].forEach(e => {
-      $('#taskAQuestion').addEventListener(e, updateBeginEnabled);
-      $('#taskBQuestion').addEventListener(e, updateBeginEnabled);
-    });
-    // Guard on click
-    $('#beginWritingBtn').onclick = () => {
-      updateBeginEnabled();
-      if($('#beginWritingBtn').disabled){
-        alert('Please provide both Task A and Task B questions before beginning to write.');
-        return;
-      }
-      showOnly('writingScreen');
-      $('#taskAQuestionDisplay').textContent = $('#taskAQuestion').value.trim();
-      $('#taskBQuestionDisplay').textContent = $('#taskBQuestion').value.trim();
-      startTimer(cfg.writingTimeMinutes);
-    };
-
-    // Word counts
-    function countWords(txt){
-      return (txt.trim().match(/\b\w+\b/g)||[]).length;
-    }
-    function updateCounts(){
-      $('#wordCountA').textContent = countWords($('#taskAResponse').value);
-      $('#wordCountB').textContent = countWords($('#taskBResponse').value);
-    }
-  ['input','change'].forEach(e => {
-      $('#taskAResponse').addEventListener(e, updateCounts);
-      $('#taskBResponse').addEventListener(e, updateCounts);
-    });
-
-    $('#resetA').onclick = ()=> { $('#taskAResponse').value=''; updateCounts(); };
-    $('#resetB').onclick = ()=> { $('#taskBResponse').value=''; updateCounts(); };
-
-    // Enable single Submit when both responses have content
-    function updateSubmitEnabled(){
-      const hasA = $('#taskAResponse').value.trim().length > 0;
-      const hasB = $('#taskBResponse').value.trim().length > 0;
-      $('#submitBoth').disabled = !(hasA && hasB);
-    }
-    ['input','change'].forEach(e => {
-      $('#taskAResponse').addEventListener(e, updateSubmitEnabled);
-      $('#taskBResponse').addEventListener(e, updateSubmitEnabled);
-    });
-    updateSubmitEnabled();
-
-    function renderJudge(container, judge){
-      const just = judge?.justification || '';
-      const rec = judge?.recommendation || '';
-      const originals = Array.isArray(judge?.originals) ? judge.originals : [];
-      const corrections = Array.isArray(judge?.corrections) ? judge.corrections : [];
-      let pairs = [];
-      const n = Math.max(originals.length, corrections.length);
-      for(let i=0;i<n;i++){
-        const o = originals[i] ?? '';
-        const c = corrections[i] ?? '';
-        if(o || c){ pairs.push(`• ${o} → ${c}`); }
-      }
-      container.innerHTML = `
-        <p class="mb-2">${just}</p>
-        <p class="mb-2"><strong>Recommendation:</strong> ${rec}</p>
-        ${pairs.length ? `<div class="mt-2"><strong>Originals → Corrections</strong><br>${pairs.join('<br>')}</div>` : ''}
-      `;
-    }
-
-    $('#submitBoth').onclick = async () => {
-      // Move to evaluation screen
-  showOnly('evaluationScreen');
-  // Removed version badge near the Home button on evaluation screen per request
-  $('#judgeA').innerHTML = '';
-  $('#judgeB').innerHTML = '';
-  $('#finalScoreCenter').textContent = '/700';
-  const spinnerBox = document.getElementById('evalSpinner');
-  if(spinnerBox) spinnerBox.classList.remove('d-none');
-
-      const body = {
-        task_a_question: $('#taskAQuestionDisplay').textContent,
-        task_a_response: $('#taskAResponse').value,
-        task_b_question: $('#taskBQuestionDisplay').textContent,
-        task_b_response: $('#taskBResponse').value
-      };
-
-      fetch('/api/evaluate/both', { method: 'POST', headers: {'Content-Type': 'application/json', ...authHeader()}, body: JSON.stringify(body)})
-        .then(r => r.json())
-        .then(j => {
-          if(j?.taskA?.judge){ renderJudge($('#judgeA'), j.taskA.judge); }
-          if(j?.taskB?.judge){ renderJudge($('#judgeB'), j.taskB.judge); }
-          if(typeof j?.finalScore === 'number'){
-            $('#finalScoreCenter').textContent = `${j.finalScore}/700`;
-          }
-          const titleEl = document.getElementById('evaluationHeaderTitle');
-          if(titleEl) titleEl.textContent = 'Evaluation complete';
-          if(spinnerBox) spinnerBox.classList.add('d-none');
-          loadDashboard();
-        })
-        .catch(() => {
-          $('#judgeA').textContent = 'Evaluation failed.';
-          const titleEl = document.getElementById('evaluationHeaderTitle');
-          if(titleEl) titleEl.textContent = 'Evaluation failed';
-          if(spinnerBox) spinnerBox.classList.add('d-none');
-        });
-    };
-
-    // Dashboard
-    function renderSubmissions(list){
-  if(!Array.isArray(list) || list.length===0){ $('#dashboardList').textContent = 'No submissions yet.'; return; }
-  const formatEastern = (iso) => new Intl.DateTimeFormat('en-US', { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false, timeZone:'America/New_York', timeZoneName:'short' }).format(new Date(iso));
-      let html = `<div class="accordion" id="submissionsAccordion">`;
-      list.forEach((s, idx) => {
-        const errorPairs = (arr1, arr2) => {
-          if(!Array.isArray(arr1) && !Array.isArray(arr2)) return '';
-          let out = [];
-          const n = Math.max((arr1||[]).length, (arr2||[]).length);
-          for(let i=0;i<n;i++){
-            const o = (arr1||[])[i] ?? '';
-            const c = (arr2||[])[i] ?? '';
-            if(o || c) out.push(`<li>${o} <span class='text-secondary'>&rarr;</span> <span class='text-success'>${c}</span></li>`);
-          }
-          return out.length ? `<ul class='mb-2'>${out.join('')}</ul>` : '';
-        };
-        html += `
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading${idx}">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${idx}" aria-expanded="false" aria-controls="collapse${idx}">
-              <div class="d-flex flex-column flex-md-row w-100 justify-content-between align-items-md-center">
-        <span><strong>${formatEastern(s.created_at)}</strong></span>
-                <span>Final score: <span class="fw-semibold">${s.final_score ?? '-'}</span></span>
+  <!-- Footer -->
+  <footer class="app-footer mt-auto">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center gap-3">
+            <div class="brand-logo" style="color: var(--text-muted); font-size: 1rem;">
+              <div class="logo-icon" style="width: 24px; height: 24px; font-size: 0.875rem; background: var(--surface-soft);">
+                <i class="bi bi-mortarboard-fill"></i>
               </div>
-            </button>
-          </h2>
-          <div id="collapse${idx}" class="accordion-collapse collapse" aria-labelledby="heading${idx}" data-bs-parent="#submissionsAccordion">
-            <div class="accordion-body">
-              <div class="row mb-3">
-                <div class="col-md-6 mb-3 mb-md-0">
-                  <div class="text-secondary small">Task A question</div>
-                  <div class="mb-2">${(s.task_a_question||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Task A response</div>
-                  <div class="mb-2">${(s.task_a_response||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Justification</div>
-                  <div class="mb-2">${(s.justification_a||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Recommendation</div>
-                  <div class="mb-2">${(s.recommendation_a||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Error analysis</div>
-                  ${errorPairs(s.originals_a, s.corrections_a)}
-                </div>
-                <div class="col-md-6">
-                  <div class="text-secondary small">Task B question</div>
-                  <div class="mb-2">${(s.task_b_question||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Task B response</div>
-                  <div class="mb-2">${(s.task_b_response||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Justification</div>
-                  <div class="mb-2">${(s.justification_b||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Recommendation</div>
-                  <div class="mb-2">${(s.recommendation_b||'').replace(/</g,'&lt;')}</div>
-                  <div class="text-secondary small">Error analysis</div>
-                  ${errorPairs(s.originals_b, s.corrections_b)}
-                </div>
-              </div>
+              <span>TEF AI Premium</span>
             </div>
           </div>
         </div>
-        `;
-      });
-      html += `</div>`;
-      $('#dashboardList').innerHTML = html;
-    }
-    function loadDashboard(){
-      fetch('/api/submissions', { headers: { ...authHeader() }})
-        .then(r=> r.ok ? r.json() : [])
-        .then(renderSubmissions)
-        .catch(()=>{});
-    }
-  $('#dashboardBtn').onclick = () => { showOnly('dashboardScreen'); loadDashboard(); };
-  $('#refreshDashboard').onclick = loadDashboard;
-  $('#backToMainFromDashboard').onclick = () => { showOnly('startScreen'); };
-  // Navigate back to Home from evaluation screen
-  const backHomeBtn = document.getElementById('backToHomeFromEvaluation');
-  if(backHomeBtn){ backHomeBtn.addEventListener('click', () => { if(state.token){ showOnly('startScreen'); } else { showOnly('authScreen'); } }); }
-  </script>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+          <div class="small">
+            <span>Powered by Gemini 2.5 Pro technology</span>
+            <span class="mx-2">•</span>
+            <span>© 2025 TEF AI Practice Tool</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="scripts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
