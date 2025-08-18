@@ -64,9 +64,9 @@
   <li><b>Authentication</b>: Secure login/registration with bcrypt password hashing and JWT tokens</li>
   <li><b>User Dashboard</b>: Complete submission history with scores, feedback, and performance tracking</li>
   <li><b>AI Question Generation</b>: Generate authentic TEF Canada-style prompts for both Task A and Task B</li>
-  <li><b>Smart Writing Interface</b>: 60-minute timer, real-time word counts, and task-specific guidance</li>
-  <li><b>Advanced AI Evaluation</b>: Dual evaluator system with judge consolidation for accurate scoring</li>
-  <li><b>Detailed Feedback</b>: Comprehensive analysis with error corrections and improvement recommendations</li>
+  <li><b>Smart Writing Interface</b>: 60-minute timer, real-time word counts, and easy to write UI</li>
+  <li><b>Advanced AI Evaluation</b>: Two independent AI evaluations, combined with a judge consolidation for accurate scoring</li>
+  <li><b>Detailed Feedback</b>: Comprehensive analysis with error corrections and actionable improvement recommendations</li>
   <li><b>Dark/Light Theme</b>: Modern responsive UI with persistent theme preferences</li>
   <li><b>Complete TEF Scoring</b>: Final score out of 700 points following official TEF Canada methodology</li>
 </ul>
@@ -104,7 +104,8 @@
 ├── test_script.py              # Standalone evaluation testing script
 ├── tef.db                      # SQLite database (auto-created)
 ├── favicon.ico                 # Application favicon
-└── tefevaluator-*.json         # Google Cloud service account credentials
+├── .env                        # Secret key and google cloud credentials (you have to create)
+└── tefevaluator-*.json         # Google Cloud service account credentials (you have to create)
 ```
 
 ---
@@ -112,22 +113,25 @@
 ## ⚡ Quick Start
 
 1. **Install dependencies**
-   ```powershell
+   ```Command Prompt
    python -m pip install -r requirements.txt
    ```
 
 2. **Set up Google Gemini API**
    - Create a `.env` file in the project root
+   - Add your `.json` file in the project root
    - Add your Google API key:
    ```env
-   GOOGLE_API_KEY=your-google-api-key-here
-   # Optional: Custom settings
-   SECRET_KEY=your-custom-secret-key
-   ACCESS_TOKEN_EXPIRE_MINUTES=120
+   GOOGLE_CLOUD_PROJECT_ID=your-google-cloud-project
+   GOOGLE_CLOUD_LOCATION=your-google-cloud-location
+   GOOGLE_APPLICATION_CREDENTIALS=your-google-service-account-json-filename
+   GOOGLE_GENAI_USE_VERTEXAI=True
+
+   SECRET_KEY=your-auto-generated-long-password
    ```
 
 3. **Run the application**
-   ```powershell
+   ```Command Prompt
    python main.py
    # or
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
@@ -135,14 +139,14 @@
 
 4. **Access the application**
    - Open your browser and go to `http://localhost:8000`
-   - Login with the test account (`testing` / `testing`) or register a new account
+   - Register a new account and login to keep track of your progress
    - Start practicing your TEF Canada Writing skills!
 
 > **Note**: The SQLite database (`tef.db`) will be created automatically on first run.
 
 ---
 
-## 🧑‍💻 Usage (v0.1.2)
+## 🧑‍💻 Usage (v1.0.0)
 
 1. Login or register
 2. Generate/paste prompts for Task A and B
@@ -287,14 +291,6 @@ python test_script.py
 - **System Preference**: Automatically detects user's preferred color scheme
 - **Accessibility**: High contrast ratios and screen reader support
 - **Mobile Optimized**: Touch-friendly interface for all devices
-
----
-
-## � Getting Google API Key
-
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key for Gemini
-3. Add it to your `.env` file as `GOOGLE_API_KEY=your-key-here`
 
 ---
 
