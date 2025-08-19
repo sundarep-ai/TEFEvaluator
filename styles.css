@@ -253,6 +253,14 @@ body {
   color: var(--text-primary);
 }
 
+/* Force smaller font size for password fields and make visually distinct */
+input[type="password"].form-control {
+  font-size: 0.8rem !important;
+  letter-spacing: 0.12em !important;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+  line-height: 1.2 !important;
+}
+
 .form-label {
   color: var(--text-secondary);
   font-weight: 500;

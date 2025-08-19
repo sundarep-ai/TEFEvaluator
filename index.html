@@ -41,7 +41,7 @@
       <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-3">
           <button class="btn nav-home-btn d-none" id="navHomeBtn" type="button">
-            <i class="bi bi-house-fill me-2"></i>Dashboard
+            <i class="bi bi-house-fill me-2"></i>Home
           </button>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -80,7 +80,7 @@
                       <label class="form-label" for="loginPassword">
                         <i class="bi bi-lock me-2"></i>Password
                       </label>
-                      <input type="password" class="form-control" id="loginPassword" autocomplete="current-password" placeholder="Enter your password">
+                      <input type="password" class="form-control" id="loginPassword" autocomplete="current-password" placeholder="Enter your password" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('loginBtn').click();}">
                     </div>
                     <button type="button" class="btn btn-primary w-100 mb-3" id="loginBtn">
                       <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
@@ -104,13 +104,13 @@
                       <label class="form-label" for="regPassword">
                         <i class="bi bi-shield-lock me-2"></i>Create Password
                       </label>
-                      <input type="password" class="form-control" id="regPassword" autocomplete="new-password" placeholder="Choose a secure password">
+                      <input type="password" class="form-control" id="regPassword" autocomplete="new-password" placeholder="Choose a secure password" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('registerBtn').click();}">
                     </div>
                     <div class="mb-4">
                       <label class="form-label" for="regPassword2">
                         <i class="bi bi-shield-check me-2"></i>Confirm Password
                       </label>
-                      <input type="password" class="form-control" id="regPassword2" autocomplete="new-password" placeholder="Confirm your password">
+                      <input type="password" class="form-control" id="regPassword2" autocomplete="new-password" placeholder="Confirm your password" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('registerBtn').click();}">
                     </div>
                     <button type="button" class="btn btn-success w-100 mb-3" id="registerBtn">
                       <i class="bi bi-person-plus-fill me-2"></i>Create Account
