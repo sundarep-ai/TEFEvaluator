@@ -109,6 +109,33 @@ if(logoutBtn){ logoutBtn.addEventListener('click', logOut); }
   const logoutBtnElInit = document.getElementById('logoutBtn');
   if(logoutBtnElInit){ logoutBtnElInit.classList.add('d-none'); }
 })();
+// Ensure Enter triggers login/register for password fields, even if DOM loads after script
+function setupPasswordEnterHandlers() {
+  [
+    {id: 'loginPassword', btn: 'loginBtn'},
+    {id: 'regPassword', btn: 'registerBtn'},
+    {id: 'regPassword2', btn: 'registerBtn'}
+  ].forEach(function(pair){
+    var el = document.getElementById(pair.id);
+    if(el && !el._enterHandlerSet) {
+      el.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          var btn = document.getElementById(pair.btn);
+          if(btn && !btn.disabled){
+            btn.click();
+          }
+        }
+      });
+      el._enterHandlerSet = true;
+    }
+  });
+}
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupPasswordEnterHandlers);
+} else {
+  setupPasswordEnterHandlers();
+}
 
 // Login/Register toggle
 function showAuth(mode){
