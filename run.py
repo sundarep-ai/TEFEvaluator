@@ -7,7 +7,7 @@ warnings.simplefilter("ignore", UserWarning)
 from datetime import datetime, timedelta
 
 import pandas as _pd
-import uvicorn
+import uvicorn, webbrowser
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -780,4 +780,6 @@ async def evaluate_both(
 
 
 if __name__ == "__main__":
+    webbrowser.open(f"http://{settings.host}:{settings.port}")
     uvicorn.run(app, host=settings.host, port=settings.port)
+

@@ -89,7 +89,7 @@
 ## 📁 Project Structure
 
 ```text
-├── main.py                      # FastAPI backend with auth, evaluation endpoints, and database
+├── run.py                       # FastAPI backend with auth, evaluation endpoints, and database
 ├── index.html                   # Single-page application with responsive Bootstrap UI
 ├── scripts.js                   # Frontend JavaScript with theme support and API integration
 ├── styles.css                   # Custom CSS with dark/light theme variables
@@ -120,7 +120,7 @@
 2. **Set up Google Gemini API**
    - Create a `.env` file in the project root
    - Add your `.json` file in the project root
-   - Add your Google API key:
+   - Add your Google Service Account Credential:
    ```env
    GOOGLE_CLOUD_PROJECT_ID=your-google-cloud-project
    GOOGLE_CLOUD_LOCATION=your-google-cloud-location
@@ -132,7 +132,7 @@
 
 3. **Run the application**
    ```Command Prompt
-   python main.py
+  python run.py
    # or
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
