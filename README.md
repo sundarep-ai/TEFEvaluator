@@ -1,4 +1,5 @@
-
+<div align="center">
+  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## How to Use (v1.2.0)">
   <br>
   <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&style=flat-square">
   <img src="https://img.shields.io/badge/FastAPI-0.111.0-green?logo=fastapi&style=flat-square">
