@@ -66,18 +66,18 @@ Example Situation de départ:
 1. Les examens scolaires ne mesurent pas vraiment l’intelligence.
 2. Le télétravail devrait être obligatoire dans toutes les entreprises.
 3. Faut-il interdire les voitures dans le centre-ville pour diminuer la pollution?
+
+Do not include any ** in the question!
 """
 
 ques_taskA_prompt = """
 
-Generate one TEF Canada Writing Task A question in French following the required format.
+Generate one TEF Canada Writing Task A question in the required format in French.
 The event should be everyday-life based (fait divers), realistic, and written in simple language. 
-Do not provide the continuation—only the beginning of the article.
 """
 
 ques_taskB_prompt = """
 
-Generate one TEF Canada Writing Task B question in French following the required format.
+Generate one TEF Canada Writing Task B question in the required format in French.
 The situation should be realistic, related to everyday issues (education, technology, society, environment, work, consumer issues).
-Do not provide the candidate’s letter—only the exam question.
 """
