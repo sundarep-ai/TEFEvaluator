@@ -1,52 +1,4 @@
 
-<div align="center">
-  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## 🧑‍💻 How to Use (v1.2.0)
-
-### ## 🔌 API Endpoints
-
-### Configuration
-- `GET /api/config` — Application configuration and settings
-
-### Authentication
-- `POST /api/auth/register` — Create new user account
-- `POST /api/auth/login` — Login and receive JWT token
-- `GET /api/me` — Get current user information
-
-### Questions & Practice
-- `POST /api/question` — Generate AI-powered TEF questions (auth required)
-
-### Evaluation
-- `POST /api/evaluate/task-a` — Evaluate Task A response (auth required)
-- `POST /api/evaluate/task-b` — Evaluate Task B response (auth required)
-- `POST /api/evaluate/both` — Evaluate both tasks and save submission (auth required)
-
-### User Data
-- `GET /api/submissions` — Get user's submission history (auth required)
-
-### Static Files
-- `GET /styles.css` — Application stylesheets
-- `GET /scripts.js` — Frontend JavaScript
-- `GET /favicon.ico` — Application favicon
-
-**Authentication**: All protected endpoints require `Authorization: Bearer <token>` header. **Login or Register**: Create an account or use the test account (`testing` / `testing`)
-2. **Generate Questions**: Use AI to generate authentic TEF Canada prompts or paste your own
-3. **Practice Writing**: Complete both Task A (narrative continuation) and Task B (opinion letter)
-4. **Get AI Feedback**: Receive detailed evaluation with scores, corrections, and recommendations, and an improved answer
-5. **Track Progress**: Review your submission history and improvement over time
-
-### Writing Tasks
-- **Task A**: Continue a news article (80+ words, narrative style)
-- **Task B**: Write an opinion letter (200+ words, formal argumentative style)
-- **Timer**: 60-minute session with real-time countdown
-- **Word Counter**: Live tracking for both tasks with minimum word requirements
-
-### AI Evaluation System
-- **Dual Evaluators**: Two independent AI evaluators assess your writing
-- **Judge Consolidation**: A third AI judge provides final feedback and scoring
-- **Comprehensive Metrics**: 
-  - Task A: Task fulfillment, organization, content relevance, vocabulary, grammar, cohesion, style
-  - Task B: Task fulfillment, structure, argumentation, vocabulary, grammar, cohesion, tone, style
-- **Final Score**: Official TEF Canada scoring out of 700 pointslueviolet?style=for-the-badge&logo=python" alt="TEF AI Practice Tool" height="32">
   <br>
   <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&style=flat-square">
   <img src="https://img.shields.io/badge/FastAPI-0.111.0-green?logo=fastapi&style=flat-square">
@@ -90,24 +42,24 @@
 ## 📁 Project Structure
 
 ```text
-├── run.py                       # FastAPI backend with auth, evaluation endpoints, and database
-├── index.html                   # Single-page application with responsive Bootstrap UI
-├── scripts.js                   # Frontend JavaScript with theme support and API integration
-├── styles.css                   # Custom CSS with dark/light theme variables
-├── config.py                    # Application settings and configuration
-├── model.py                     # Pydantic schemas and SQLAlchemy database models
-├── prompt_taskA.py              # AI evaluation prompts for TEF Task A (narrative continuation)
-├── prompt_taskB.py              # AI evaluation prompts for TEF Task B (opinion letter)
-├── prompt_question_generation.py # AI prompts for generating TEF-style questions
-├── prompt_answer_generation.py  # AI prompts for generating TEF-style answers
-├── requirements.txt             # Python dependencies
-├── test_prompts.ipynb          # Jupyter notebook for testing AI evaluation system
-├── test_sample.py              # Sample questions and responses for testing
-├── test_script.py              # Standalone evaluation testing script
-├── tef.db                      # SQLite database (auto-created)
-├── favicon.ico                 # Application favicon
-├── .env                        # Secret key and google cloud credentials (you have to create)
-└── tefevaluator-*.json         # Google Cloud service account credentials (you have to create)
+├── run.py                          # FastAPI backend with auth, evaluation endpoints, and database
+├── index.html                      # Single-page application with responsive Bootstrap UI
+├── scripts.js                      # Frontend JavaScript with theme support and API integration
+├── styles.css                      # Custom CSS with dark/light theme variables
+├── config.py                       # Application settings and configuration
+├── model.py                        # Pydantic schemas and SQLAlchemy database models
+├── prompt_taskA.py                 # AI evaluation prompts for TEF Task A (narrative continuation)
+├── prompt_taskB.py                 # AI evaluation prompts for TEF Task B (opinion letter)
+├── prompt_question_generation.py   # AI prompts for generating TEF-style questions
+├── prompt_answer_generation.py     # AI prompts for generating TEF-style answers
+├── requirements.txt                # Python dependencies
+├── test_prompts.ipynb              # Jupyter notebook for testing AI evaluation system
+├── test_sample.py                  # Sample questions and responses for testing
+├── test_script.py                  # Standalone evaluation testing script
+├── tef.db                          # SQLite database (auto-created)
+├── favicon.ico                     # Application favicon
+├── .env                            # Secret key and google cloud credentials (you have to create)
+└── tefevaluator-*.json             # Google Cloud service account credentials (you have to create)
 ```
 
 ---
@@ -134,7 +86,7 @@
 
 3. **Run the application**
    ```Command Prompt
-  python run.py
+   python run.py
    or
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
@@ -171,9 +123,10 @@ Output shown:
 - POST `/api/evaluate/task-b` — Evaluate Task B (auth required)
 - POST `/api/evaluate/both` — Evaluate and persist both tasks (auth required)
 - POST `/api/auth/register` — Register with username/password (hashed)
-- POST `/api/auth/login` — Login to receive JWT
-- GET `/api/me` — Current user info
-- GET `/api/submissions` — List current user’s submissions
+- POST `/api/auth/login` — Login to receive JWT (auth required)
+- GET `/api/me` — Current user info (auth required)
+- GET `/api/submissions` — List current user’s submissions (auth required)
+- POST `/api/generate-improved-answer` — Generate improved answers (auth required)
 
 Notes:
 - Use `Authorization: Bearer <token>` with authenticated routes.

@@ -474,7 +474,7 @@ function renderSubmissions(list){
                     <p class="small">${(s.recommendation_a||'').replace(/</g,'&lt;')}</p>
                   </div>
                   ${errorPairs(s.originals_a, s.corrections_a) ? `<div><h5 class="h6 text-warning mb-1">Corrections</h5>${errorPairs(s.originals_a, s.corrections_a)}</div>` : ''}
-                  ${s.gemini_improved_answer_taskA ? `<div class="mt-3"><h5 class="h6 text-info mb-1"><i class="bi bi-stars me-1"></i>Version améliorée par Gemini</h5><div class="improved-answer">${(s.gemini_improved_answer_taskA||'').replace(/</g,'&lt;')}</div></div>` : ''}
+                  ${s.ai_improved_answer_taskA ? `<div class="mt-3"><h5 class="h6 text-info mb-1"><i class="bi bi-stars me-1"></i>Version améliorée par Gemini</h5><div class="improved-answer">${(s.ai_improved_answer_taskA||'').replace(/</g,'&lt;')}</div></div>` : ''}
                 </div>
               </div>
             </div>
@@ -501,7 +501,7 @@ function renderSubmissions(list){
                     <p class="small">${(s.recommendation_b||'').replace(/</g,'&lt;')}</p>
                   </div>
                   ${errorPairs(s.originals_b, s.corrections_b) ? `<div><h5 class="h6 text-warning mb-1">Corrections</h5>${errorPairs(s.originals_b, s.corrections_b)}</div>` : ''}
-                  ${s.gemini_improved_answer_taskB ? `<div class="mt-3"><h5 class="h6 text-info mb-1"><i class="bi bi-stars me-1"></i>Version améliorée par Gemini</h5><div class="improved-answer">${(s.gemini_improved_answer_taskB||'').replace(/</g,'&lt;')}</div></div>` : ''}
+                  ${s.ai_improved_answer_taskB ? `<div class="mt-3"><h5 class="h6 text-info mb-1"><i class="bi bi-stars me-1"></i>Version améliorée par Gemini</h5><div class="improved-answer">${(s.ai_improved_answer_taskB||'').replace(/</g,'&lt;')}</div></div>` : ''}
                 </div>
               </div>
             </div>

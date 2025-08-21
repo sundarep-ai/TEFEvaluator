@@ -503,8 +503,8 @@ def list_submissions(current_user: User = Depends(get_current_user), db: Session
             "recommendation_b": s.recommendation_b,
             "originals_b": s.originals_b,
             "corrections_b": s.corrections_b,
-            "gemini_improved_answer_taskA": s.gemini_improved_answer_taskA,
-            "gemini_improved_answer_taskB": s.gemini_improved_answer_taskB,
+            "ai_improved_answer_taskA": s.ai_improved_answer_taskA,
+            "ai_improved_answer_taskB": s.ai_improved_answer_taskB,
         }
         for s in subs
     ]
@@ -841,9 +841,9 @@ async def generate_improved_answer(
         if recent_submission:
             # Save the improved answer to the database
             if payload.taskType == "A":
-                recent_submission.gemini_improved_answer_taskA = improved_answer
+                recent_submission.ai_improved_answer_taskA = improved_answer
             else:
-                recent_submission.gemini_improved_answer_taskB = improved_answer
+                recent_submission.ai_improved_answer_taskB = improved_answer
             
             db.commit()
         
