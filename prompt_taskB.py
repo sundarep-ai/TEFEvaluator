@@ -39,6 +39,8 @@ Notes:
  - Keep feedback concise and actionable.
  - Strictly return the output in the specified format.
  - Your feedback is going to impact the student's learning journey and actual score in the exam.
+
+Score accurately and strictly as a TEF Canada writing examiner. 
 """
 
 # Evaluator 2 System Prompt for Task B
@@ -79,6 +81,8 @@ Notes:
  - Keep feedback concise and actionable.
  - Strictly return the output in the specified format.
  - Your feedback is going to impact the student's learning journey and actual score in the exam.
+
+Score accurately and strictly as a TEF Canada writing examiner. 
 """
 
 
