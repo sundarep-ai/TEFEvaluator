@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## 🧑‍💻 How to Use (v1.1.0)
+  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## 🧑‍💻 How to Use (v1.2.0)
 
 ### ## 🔌 API Endpoints
 
@@ -31,7 +31,7 @@
 **Authentication**: All protected endpoints require `Authorization: Bearer <token>` header. **Login or Register**: Create an account or use the test account (`testing` / `testing`)
 2. **Generate Questions**: Use AI to generate authentic TEF Canada prompts or paste your own
 3. **Practice Writing**: Complete both Task A (narrative continuation) and Task B (opinion letter)
-4. **Get AI Feedback**: Receive detailed evaluation with scores, corrections, and recommendations
+4. **Get AI Feedback**: Receive detailed evaluation with scores, corrections, and recommendations, and an improved answer
 5. **Track Progress**: Review your submission history and improvement over time
 
 ### Writing Tasks
@@ -53,8 +53,8 @@
   <img src="https://img.shields.io/badge/Bootstrap-5.3.3-purple?logo=bootstrap&style=flat-square">
   <img src="https://img.shields.io/badge/Gemini%20LLM-2.5%20Pro/Flash-orange?logo=googlecloud&style=flat-square">
   <br><br>
-   <h1>📝 TEF AI Practice Tool v1.1.0</h1>
-  <p>A professional, responsive web app for practicing the <b>TEF Canada Writing</b> module, powered by Google Gemini 2.5 LLMs.<br><i>Fast, modern, and ready for your next exam.</i></p>
+   <h1>📝 TEF AI Practice Tool v1.2.0</h1>
+  <p>A professional, responsive web app for practicing the <b>TEF Canada Writing</b> module, powered by Google Gemini 2.5 LLMs.<br><i>Fast, modern, and ready for your next exam.</i></p>  
 </div>
 
 
@@ -67,6 +67,7 @@
   <li><b>Smart Writing Interface</b>: 60-minute timer, real-time word counts, and easy to write UI</li>
   <li><b>Advanced AI Evaluation</b>: Two independent AI evaluations, combined with a judge consolidation for accurate scoring</li>
   <li><b>Detailed Feedback</b>: Comprehensive analysis with error corrections and actionable improvement recommendations</li>
+  <li><b>Improved Answer</b>: Takes in your responses to both the tasks and provides an improved answer
   <li><b>Dark/Light Theme</b>: Modern responsive UI with persistent theme preferences</li>
   <li><b>Complete TEF Scoring</b>: Final score out of 700 points following official TEF Canada methodology</li>
 </ul>
@@ -98,6 +99,7 @@
 ├── prompt_taskA.py              # AI evaluation prompts for TEF Task A (narrative continuation)
 ├── prompt_taskB.py              # AI evaluation prompts for TEF Task B (opinion letter)
 ├── prompt_question_generation.py # AI prompts for generating TEF-style questions
+├── prompt_answer_generation.py  # AI prompts for generating TEF-style answers
 ├── requirements.txt             # Python dependencies
 ├── test_prompts.ipynb          # Jupyter notebook for testing AI evaluation system
 ├── test_sample.py              # Sample questions and responses for testing
@@ -133,7 +135,7 @@
 3. **Run the application**
    ```Command Prompt
   python run.py
-   # or
+   or
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
 
@@ -146,7 +148,7 @@
 
 ---
 
-## 🧑‍💻 Usage (v1.1.0)
+## 🧑‍💻 Usage (v1.2.0)
 
 1. Login or register
 2. Generate/paste prompts for Task A and B
@@ -168,8 +170,6 @@ Output shown:
 - POST `/api/evaluate/task-a` — Evaluate Task A (auth required)
 - POST `/api/evaluate/task-b` — Evaluate Task B (auth required)
 - POST `/api/evaluate/both` — Evaluate and persist both tasks (auth required)
-
-New in v0.1.2:
 - POST `/api/auth/register` — Register with username/password (hashed)
 - POST `/api/auth/login` — Login to receive JWT
 - GET `/api/me` — Current user info

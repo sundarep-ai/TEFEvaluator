@@ -1,6 +1,6 @@
 from typing import List, Final
 from pydantic import BaseModel, Field
-from datetime import datetime
+import datetime
 
 # --- SQLAlchemy (DB models) ---
 from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, create_engine
@@ -15,13 +15,31 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+class EST5EDT(datetime.tzinfo):
+
+    def utcoffset(self, dt):
+        return datetime.timedelta(hours=-5) + self.dst(dt)
+
+    def dst(self, dt):
+        d = datetime.datetime(dt.year, 3, 8)        #2nd Sunday in March
+        self.dston = d + datetime.timedelta(days=6-d.weekday())
+        d = datetime.datetime(dt.year, 11, 1)       #1st Sunday in Nov
+        self.dstoff = d + datetime.timedelta(days=6-d.weekday())
+        if self.dston <= dt.replace(tzinfo=None) < self.dstoff:
+            return datetime.timedelta(hours=1)
+        else:
+            return datetime.timedelta(0)
+
+    def tzname(self, dt):
+        return 'EST5EDT'
+
 
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(64), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.now(tz=EST5EDT()))
     submissions = relationship("Submission", back_populates="user")
 
 
@@ -47,7 +65,10 @@ class Submission(Base):
     recommendation_b = Column(String)
     originals_b = Column(JSON)
     corrections_b = Column(JSON)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    # Gemini-improved answers
+    gemini_improved_answer_taskA = Column(String)
+    gemini_improved_answer_taskB = Column(String)
+    created_at = Column(DateTime, default=datetime.datetime.now(tz=EST5EDT()))
     user = relationship("User", back_populates="submissions")
 
 

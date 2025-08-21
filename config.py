@@ -5,7 +5,7 @@ from typing import List
 class Settings(BaseSettings):
     # App
     app_name: str = "TEF AI Practice Tool"
-    app_version: str = "1.1.0"
+    app_version: str = "1.2.0"
     host: str = "127.0.0.1"
     port: int = 8000
     debug: bool = True

@@ -404,6 +404,78 @@
           </div>
         </div>
 
+        <!-- Gemini Enhanced Answers Button -->
+        <div class="text-center mt-4 mb-4">
+          <button class="btn btn-success btn-lg" id="geminiEnhanceBtn" style="display: none;">
+            <i class="bi bi-magic me-2"></i>Voir la version améliorée par l'IA
+          </button>
+          <div id="geminiLoadingSpinner" class="d-none mt-3">
+            <div class="spinner-border spinner-primary me-2" role="status"></div>
+            <span class="text-muted">Génération de la version améliorée en cours...</span>
+          </div>
+        </div>
+
+        <!-- Enhanced Answers Display -->
+        <div id="enhancedAnswersDisplay" class="d-none">
+          <div class="row g-4 mb-4">
+            <div class="col-12">
+              <div class="premium-card">
+                <div class="card-header">
+                  <h3 class="h5 mb-0">
+                    <i class="bi bi-stars me-2"></i>Réponses Améliorées par l'IA Gemini
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <div class="row g-4">
+                    <div class="col-lg-6">
+                      <div class="enhanced-answer-section">
+                        <h4 class="enhanced-answer-title">
+                          <i class="bi bi-file-text me-2"></i>Tâche A
+                        </h4>
+                        <div class="mb-3">
+                          <h5 class="h6 text-muted mb-2">Question</h5>
+                          <div class="question-display-small" id="enhancedQuestionA"></div>
+                        </div>
+                        <div class="mb-3">
+                          <h5 class="h6 text-muted mb-2">Votre réponse originale</h5>
+                          <div class="original-answer" id="enhancedOriginalA"></div>
+                        </div>
+                        <div class="mb-3">
+                          <h5 class="h6 text-success mb-2">
+                            <i class="bi bi-stars me-1"></i>Version améliorée par Gemini
+                          </h5>
+                          <div class="improved-answer" id="enhancedImprovedA"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="enhanced-answer-section">
+                        <h4 class="enhanced-answer-title">
+                          <i class="bi bi-envelope me-2"></i>Tâche B
+                        </h4>
+                        <div class="mb-3">
+                          <h5 class="h6 text-muted mb-2">Question</h5>
+                          <div class="question-display-small" id="enhancedQuestionB"></div>
+                        </div>
+                        <div class="mb-3">
+                          <h5 class="h6 text-muted mb-2">Votre réponse originale</h5>
+                          <div class="original-answer" id="enhancedOriginalB"></div>
+                        </div>
+                        <div class="mb-3">
+                          <h5 class="h6 text-success mb-2">
+                            <i class="bi bi-stars me-1"></i>Version améliorée par Gemini
+                          </h5>
+                          <div class="improved-answer" id="enhancedImprovedB"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center mt-4">
           <button class="btn btn-primary" id="backToHomeFromEvaluation">
             <i class="bi bi-house-fill me-2"></i>Return to Dashboard
