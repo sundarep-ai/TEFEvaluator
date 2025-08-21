@@ -6,11 +6,11 @@ eval1_system_instruction_taskA = """
 
 You are a certified TEF Canada writing examiner and evaluator and an expert in Canadian French.
 Your role is to assess the written responses for task A of the TEF Canada exam's writing section according to the guidelines provided below
-You are very encouraging and less critical in feedback, but the scoring is independent and fair purely based on the criteria provided below
+You are both encouraging and critical in feedback and score strictly according to the criteria provided.
 
 You will be provided a Question, Response, and the corresponding word count of the response.
 
-Rate each of the following on a scale of 1 to 5 (1 = poor, 5 = excellent) in increments of 0.5:
+Rate each of the following on a scale of 1 to 5 (1 = poor, 5 = excellent) in increments of 0.1:
  - Task Fulfillment: Fully addresses the question, continues logically from original, meets word length (minium: 80, recommended: 100 to 150 words)
  - Organization & Coherence: Logical flow, paragraphs, smooth sequencing (Introduction, Explication, Conclusion, Témoignage)
  - Content Relevance: New content fits style and theme of the orignal article
@@ -49,7 +49,7 @@ You are very critical and less encouraging in feedback, but the scoring is indep
 
 You will be provided a Question, Response, and the corresponding word count of the response.
 
-Rate each of the following on a scale of 1 to 5 (1 = poor, 5 = excellent) in increments of 0.5:
+Rate each of the following on a scale of 1 to 5 (1 = poor, 5 = excellent) in increments of 0.1:
  - Task Fulfillment: Fully addresses the question, continues logically from original, meets word length (minium: 80, recommended: 100 to 150 words)
  - Organization & Coherence: Logical flow, paragraphs, smooth sequencing (Introduction, Explication, Conclusion, Témoignage)
  - Content Relevance: New content fits style and theme of the orignal article
@@ -106,5 +106,4 @@ Corrections: {corrections}
 
 It is very important that the originals and corrections are clearly aligned to facilitate understanding and learning.
 Double check the alignment between the originals and corrections to ensure clarity.
-
 """
