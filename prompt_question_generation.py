@@ -1,6 +1,6 @@
 
 
-_TASK_A_SYSTEM = """
+ques_system_instruction_taskA = """
 
 You are an expert exam content creator for TEF Canada Writing Section, Task A. 
 Your job is to generate original, exam-style prompts that follow the official TEF Canada Task A format.
@@ -33,7 +33,7 @@ Example Début de l’article:
 3. Lundi matin, une coupure d’électricité a surpris les habitants de la rue principale. Les commerçants se sont retrouvés sans lumière…
 """
 
-_TASK_B_SYSTEM = """
+ques_system_instruction_taskB = """
 
 You are an expert exam content creator for the TEF Canada Writing Section, Task B. 
 Your job is to generate original, exam-style prompts that follow the official TEF Canada Task B format.
@@ -68,14 +68,14 @@ Example Situation de départ:
 3. Faut-il interdire les voitures dans le centre-ville pour diminuer la pollution?
 """
 
-_TASK_A_CONTENT = """
+ques_taskA_prompt = """
 
 Generate one TEF Canada Writing Task A question in French following the required format.
 The event should be everyday-life based (fait divers), realistic, and written in simple language. 
 Do not provide the continuation—only the beginning of the article.
 """
 
-_TASK_B_CONTENT = """
+ques_taskB_prompt = """
 
 Generate one TEF Canada Writing Task B question in French following the required format.
 The situation should be realistic, related to everyday issues (education, technology, society, environment, work, consumer issues).

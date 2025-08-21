@@ -52,6 +52,13 @@ from prompt_taskB import (
     judge_system_instruction_taskB,
 )
 
+from prompt_question_generation import (
+    ques_system_instruction_taskA,
+    ques_taskA_prompt,
+    ques_system_instruction_taskB,
+    ques_taskB_prompt,
+)
+
 load_dotenv()
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
@@ -292,7 +299,7 @@ def extract_feedback_df(response, metrics):
 
 
 def extract_feedback_summary(df1, df2):
-    rating = float(round((df1.rating.mean() * 0.5 + df2.rating.mean() * 0.5) / 5 * 100, 2))
+    rating = float(round((df1.rating.mean() * 0.5 + df2.rating.mean() * 0.5), 2))
     justification = " ".join(df1.justification.fillna("").tolist()) + " " + " ".join(
         df2.justification.fillna("").tolist()
     )
@@ -359,20 +366,27 @@ class EvaluateBothRequest(BaseModel):
 
 
 # =====================
+# Score Calibration 
+# =====================
+MIN_SCORE = 150
+MAX_SCORE = 700
+RANGE = MAX_SCORE - MIN_SCORE
+P = 2.0 
+
+def exponential_score(avg_rating, p=P):
+    normalized = (avg_rating - 1) / 4 
+    curved = normalized ** p
+    final = MIN_SCORE + (curved * RANGE)
+    return round(final)
+
+
+# =====================
 # Question Generation (inlined)
 # =====================
 async def generate_task_a_question(client: genai.Client) -> str:
     """Generate a single Task A (narrative continuation) question using Gemini."""
-    task_a_system = (
-        "You are a TEF exam question generator. Create a concise French prompt for a short narrative continuation task (Task A)."
-    )
-    task_a_content = (
-        "Generate a single Task A prompt in French for a narrative continuation.\n"
-        "Constraints:\n"
-        "- The student should write approximately 80–120 words.\n"
-        "- Keep the scenario modern, everyday-life relevant, and culturally neutral.\n"
-        "- Output only the prompt text, no quotes or extra commentary."
-    )
+    task_a_system = ques_system_instruction_taskA
+    task_a_content = ques_taskA_prompt
     resp = client.models.generate_content(
         model=model_pro,
         config=types.GenerateContentConfig(
@@ -382,24 +396,13 @@ async def generate_task_a_question(client: genai.Client) -> str:
         contents=task_a_content,
     )
     text = getattr(resp, "text", "").strip()
-    return text or (
-        "Rédigez un court récit (80–120 mots) à partir de la situation suivante: "
-        "Vous arrivez dans une nouvelle ville et rencontrez votre voisin pour la première fois."
-    )
+    return text
 
 
 async def generate_task_b_question(client: genai.Client) -> str:
     """Generate a single Task B (opinion/argumentative letter) question using Gemini."""
-    task_b_system = (
-        "You are a TEF exam question generator. Create a concise French prompt for an opinion/argumentative letter task (Task B)."
-    )
-    task_b_content = (
-        "Generate a single Task B prompt in French for an opinion/argumentative letter.\n"
-        "Constraints:\n"
-        "- The student should write approximately 200–250 words.\n"
-        "- The topic should be contemporary and suitable for general audiences.\n"
-        "- Output only the prompt text, no quotes or extra commentary."
-    )
+    task_b_system = ques_system_instruction_taskB
+    task_b_content = ques_taskB_prompt
     resp = client.models.generate_content(
         model=model_pro,
         config=types.GenerateContentConfig(
@@ -409,10 +412,7 @@ async def generate_task_b_question(client: genai.Client) -> str:
         contents=task_b_content,
     )
     text = getattr(resp, "text", "").strip()
-    return text or (
-        "Écrivez une lettre d’opinion (200–250 mots) sur l’impact du télétravail sur la qualité de vie et la productivité."
-    )
-
+    return text
 
 # =====================
 # Routes
@@ -744,7 +744,8 @@ async def evaluate_both(
     )
     judge_B = json.loads(re.search(r"\{.*\}", resp_judge_B.text, re.DOTALL).group(0))
 
-    final_score = int(round((rating_A * 0.4 + rating_B * 0.6) * 6.99))
+    final_raw_score = round((rating_A * 0.4 + rating_B * 0.6), 2)
+    final_score = exponential_score(final_raw_score)
 
     # Persist submission (store Judge LLM justification/recommendation and error analysis)
     sub = Submission(

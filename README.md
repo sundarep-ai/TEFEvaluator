@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## 🧑‍💻 How to Use (v1.0.0)
+  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## 🧑‍💻 How to Use (v1.1.0)
 
 ### ## 🔌 API Endpoints
 
@@ -53,7 +53,7 @@
   <img src="https://img.shields.io/badge/Bootstrap-5.3.3-purple?logo=bootstrap&style=flat-square">
   <img src="https://img.shields.io/badge/Gemini%20LLM-2.5%20Pro/Flash-orange?logo=googlecloud&style=flat-square">
   <br><br>
-   <h1>📝 TEF AI Practice Tool v1.0.0</h1>
+   <h1>📝 TEF AI Practice Tool v1.1.0</h1>
   <p>A professional, responsive web app for practicing the <b>TEF Canada Writing</b> module, powered by Google Gemini 2.5 LLMs.<br><i>Fast, modern, and ready for your next exam.</i></p>
 </div>
 
@@ -146,7 +146,7 @@
 
 ---
 
-## 🧑‍💻 Usage (v1.0.0)
+## 🧑‍💻 Usage (v1.1.0)
 
 1. Login or register
 2. Generate/paste prompts for Task A and B
