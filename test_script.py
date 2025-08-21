@@ -142,7 +142,7 @@ def extract_feedback_summary(df1, df2):
     """
     Combines feedback from two DataFrames, flattens originals/corrections, and computes mean rating.
     """
-    rating = float(round((df1.rating.mean()*0.5 + df2.rating.mean()*0.5)/5*100,2))
+    rating = float(round((df1.rating.mean()*0.5 + df2.rating.mean()*0.5),2))
     justification = ' '.join(df1.justification.tolist()) + ' '.join(df2.justification.tolist())
     recommendation = ' '.join(df1.recommendation.tolist()) + ' '.join(df2.recommendation.tolist())
     # Flatten all originals and corrections to single lists
@@ -255,6 +255,20 @@ taskB_judge_content = judge_prompt_taskB.format(
     originals = originals_taskB,
     corrections = corrections_taskB)
 
+MIN_SCORE = 150
+MAX_SCORE = 700
+RANGE = MAX_SCORE - MIN_SCORE
+P = 2.0 
+
+def exponential_score(avg_rating, p=P):
+    normalized = (avg_rating - 1) / 4 
+    curved = normalized ** p
+    final = MIN_SCORE + (curved * RANGE)
+    return round(final)
+
+final_raw_score = round((rating_taskA * 0.4 + rating_taskB * 0.6), 2)
+final_score = exponential_score(final_raw_score)
+
 # Get judge model responses for both tasks
 response_judge_taskA = client.models.generate_content(
     model=model_pro,
@@ -272,3 +286,8 @@ response_judge_taskB = client.models.generate_content(
         response_schema=judge_output_schema),
     contents=taskB_judge_content
 )
+
+print(f"Final Score: {final_score}")
+print(f"Task A Evaluation Summary: {response_judge_taskA.text}")
+print(f"Task B Evaluation Summary: {response_judge_taskB.text}")
+
