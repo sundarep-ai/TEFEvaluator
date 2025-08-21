@@ -216,6 +216,9 @@ function resetWritingFlow(){
   const timerEl = $('#timer');
   if(timerEl) timerEl.textContent = '--:--:--';
 
+  // Reset enhanced answers if function exists
+  if(typeof resetEnhancedAnswers === 'function') resetEnhancedAnswers();
+
   // Ensure derived states stay consistent
   if(typeof updateBeginEnabled === 'function') updateBeginEnabled();
   if(typeof updateCounts === 'function') updateCounts();
@@ -342,6 +345,9 @@ function renderJudge(container, judge){
 }
 
 $('#submitBoth').onclick = async () => {
+  // Reset enhanced answers when starting new evaluation
+  resetEnhancedAnswers();
+  
   // Move to evaluation screen
   showOnly('evaluationScreen');
   $('#judgeA').innerHTML = '';
@@ -369,6 +375,23 @@ $('#submitBoth').onclick = async () => {
       if(titleEl) titleEl.textContent = 'Evaluation Complete';
       if(spinnerBox) spinnerBox.classList.add('d-none');
       loadDashboard();
+      
+      // Show the Gemini enhance button after evaluation is complete
+      const geminiBtn = document.getElementById('geminiEnhanceBtn');
+      if(geminiBtn) {
+        geminiBtn.style.display = 'inline-block';
+        // Store current evaluation data for Gemini enhancement
+        window.currentEvaluationData = {
+          taskA: {
+            question: $('#taskAQuestionDisplay').textContent,
+            userAnswer: $('#taskAResponse').value
+          },
+          taskB: {
+            question: $('#taskBQuestionDisplay').textContent,
+            userAnswer: $('#taskBResponse').value
+          }
+        };
+      }
     })
     .catch(() => {
       $('#judgeA').innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>Evaluation failed. Please try again.</div>';
@@ -451,6 +474,7 @@ function renderSubmissions(list){
                     <p class="small">${(s.recommendation_a||'').replace(/</g,'&lt;')}</p>
                   </div>
                   ${errorPairs(s.originals_a, s.corrections_a) ? `<div><h5 class="h6 text-warning mb-1">Corrections</h5>${errorPairs(s.originals_a, s.corrections_a)}</div>` : ''}
+                  ${s.gemini_improved_answer_taskA ? `<div class="mt-3"><h5 class="h6 text-info mb-1"><i class="bi bi-stars me-1"></i>Version améliorée par Gemini</h5><div class="improved-answer">${(s.gemini_improved_answer_taskA||'').replace(/</g,'&lt;')}</div></div>` : ''}
                 </div>
               </div>
             </div>
@@ -477,6 +501,7 @@ function renderSubmissions(list){
                     <p class="small">${(s.recommendation_b||'').replace(/</g,'&lt;')}</p>
                   </div>
                   ${errorPairs(s.originals_b, s.corrections_b) ? `<div><h5 class="h6 text-warning mb-1">Corrections</h5>${errorPairs(s.originals_b, s.corrections_b)}</div>` : ''}
+                  ${s.gemini_improved_answer_taskB ? `<div class="mt-3"><h5 class="h6 text-info mb-1"><i class="bi bi-stars me-1"></i>Version améliorée par Gemini</h5><div class="improved-answer">${(s.gemini_improved_answer_taskB||'').replace(/</g,'&lt;')}</div></div>` : ''}
                 </div>
               </div>
             </div>
@@ -501,3 +526,115 @@ $('#backToMainFromDashboard').onclick = () => { showOnly('startScreen'); };
 // Navigate back to Home from evaluation screen
 const backHomeBtn = document.getElementById('backToHomeFromEvaluation');
 if(backHomeBtn){ backHomeBtn.addEventListener('click', () => { if(state.token){ showOnly('startScreen'); } else { showOnly('authScreen'); } }); }
+
+// Gemini Enhanced Answers functionality
+async function generateImprovedAnswer(taskType, question, userAnswer) {
+  const response = await fetch('/generate-improved-answer', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader()
+    },
+    body: JSON.stringify({
+      taskType: taskType,
+      question: question,
+      userAnswer: userAnswer
+    })
+  });
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  return data.improvedAnswer;
+}
+
+// Handle Gemini enhance button click
+const geminiEnhanceBtn = document.getElementById('geminiEnhanceBtn');
+if(geminiEnhanceBtn) {
+  geminiEnhanceBtn.addEventListener('click', async () => {
+    if (!window.currentEvaluationData) {
+      alert('Données d\'évaluation non disponibles. Veuillez refaire une évaluation.');
+      return;
+    }
+    
+    const btn = geminiEnhanceBtn;
+    const spinner = document.getElementById('geminiLoadingSpinner');
+    const enhancedDisplay = document.getElementById('enhancedAnswersDisplay');
+    
+    try {
+      // Show loading state
+      btn.style.display = 'none';
+      spinner.classList.remove('d-none');
+      
+      // Generate improved answers for both tasks in parallel
+      const [improvedA, improvedB] = await Promise.all([
+        generateImprovedAnswer('A', window.currentEvaluationData.taskA.question, window.currentEvaluationData.taskA.userAnswer),
+        generateImprovedAnswer('B', window.currentEvaluationData.taskB.question, window.currentEvaluationData.taskB.userAnswer)
+      ]);
+      
+      // Populate the enhanced answers display
+      $('#enhancedQuestionA').textContent = window.currentEvaluationData.taskA.question;
+      $('#enhancedOriginalA').textContent = window.currentEvaluationData.taskA.userAnswer;
+      $('#enhancedImprovedA').textContent = improvedA;
+      
+      $('#enhancedQuestionB').textContent = window.currentEvaluationData.taskB.question;
+      $('#enhancedOriginalB').textContent = window.currentEvaluationData.taskB.userAnswer;
+      $('#enhancedImprovedB').textContent = improvedB;
+      
+      // Show the enhanced answers display
+      enhancedDisplay.classList.remove('d-none');
+      
+      // Hide loading spinner
+      spinner.classList.add('d-none');
+      
+      // Change button text to indicate completion
+      btn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Versions améliorées générées';
+      btn.classList.remove('btn-success');
+      btn.classList.add('btn-outline-success');
+      btn.disabled = true;
+      btn.style.display = 'inline-block';
+      
+    } catch (error) {
+      console.error('Error generating improved answers:', error);
+      
+      // Hide loading spinner
+      spinner.classList.add('d-none');
+      
+      // Show error message
+      alert('Erreur lors de la génération des réponses améliorées. Veuillez réessayer.');
+      
+      // Restore button
+      btn.style.display = 'inline-block';
+    }
+  });
+}
+
+// Reset enhanced answers when starting a new evaluation
+function resetEnhancedAnswers() {
+  const geminiBtn = document.getElementById('geminiEnhanceBtn');
+  const enhancedDisplay = document.getElementById('enhancedAnswersDisplay');
+  const spinner = document.getElementById('geminiLoadingSpinner');
+  
+  if (geminiBtn) {
+    geminiBtn.style.display = 'none';
+    geminiBtn.innerHTML = '<i class="bi bi-magic me-2"></i>Voir la version améliorée par l\'IA';
+    geminiBtn.classList.remove('btn-outline-success');
+    geminiBtn.classList.add('btn-success');
+    geminiBtn.disabled = false;
+  }
+  
+  if (enhancedDisplay) {
+    enhancedDisplay.classList.add('d-none');
+  }
+  
+  if (spinner) {
+    spinner.classList.add('d-none');
+  }
+  
+  // Clear stored evaluation data
+  window.currentEvaluationData = null;
+}
+
+

@@ -59,6 +59,13 @@ from prompt_question_generation import (
     ques_taskB_prompt,
 )
 
+from prompt_answer_generation import (
+    answer_system_instruction_taskA,
+    answer_system_instruction_taskB,
+    answer_taskA_prompt,
+    answer_taskB_prompt,
+)
+
 load_dotenv()
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
@@ -365,6 +372,12 @@ class EvaluateBothRequest(BaseModel):
     task_b_response: str
 
 
+class GenerateImprovedAnswerRequest(BaseModel):
+    taskType: Literal["A", "B"]
+    question: str
+    userAnswer: str
+
+
 # =====================
 # Score Calibration 
 # =====================
@@ -490,6 +503,8 @@ def list_submissions(current_user: User = Depends(get_current_user), db: Session
             "recommendation_b": s.recommendation_b,
             "originals_b": s.originals_b,
             "corrections_b": s.corrections_b,
+            "gemini_improved_answer_taskA": s.gemini_improved_answer_taskA,
+            "gemini_improved_answer_taskB": s.gemini_improved_answer_taskB,
         }
         for s in subs
     ]
@@ -778,6 +793,68 @@ async def evaluate_both(
         "taskB": {"judge": judge_B, "rating": rating_B},
         "finalScore": final_score,
     }
+
+
+@app.post("/generate-improved-answer")
+async def generate_improved_answer(
+    payload: GenerateImprovedAnswerRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Generate an improved version of the user's answer using Gemini AI."""
+    
+    # Determine which prompts to use based on task type
+    if payload.taskType == "A":
+        system_instruction = answer_system_instruction_taskA
+        prompt_template = answer_taskA_prompt
+    else:  # taskType == "B"
+        system_instruction = answer_system_instruction_taskB
+        prompt_template = answer_taskB_prompt
+    
+    # Format the prompt with the user's answer
+    formatted_prompt = prompt_template.format(user_answer=payload.userAnswer)
+    
+    try:
+        # Call Gemini to generate improved answer
+        resp = client.models.generate_content(
+            model=model_pro,
+            config=types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                response_mime_type="text/plain",
+            ),
+            contents=formatted_prompt,
+        )
+        
+        improved_answer = getattr(resp, "text", "").strip()
+        
+        if not improved_answer:
+            raise HTTPException(
+                status_code=500, 
+                detail="Failed to generate improved answer"
+            )
+        
+        # Find the most recent submission for this user to save the improved answer
+        recent_submission = db.query(Submission).filter(
+            Submission.user_id == current_user.id
+        ).order_by(Submission.created_at.desc()).first()
+        
+        if recent_submission:
+            # Save the improved answer to the database
+            if payload.taskType == "A":
+                recent_submission.gemini_improved_answer_taskA = improved_answer
+            else:
+                recent_submission.gemini_improved_answer_taskB = improved_answer
+            
+            db.commit()
+        
+        return {"improvedAnswer": improved_answer}
+        
+    except Exception as e:
+        print(f"Error generating improved answer: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail="Failed to generate improved answer"
+        )
 
 
 if __name__ == "__main__":
