@@ -65,9 +65,9 @@ class Submission(Base):
     recommendation_b = Column(String)
     originals_b = Column(JSON)
     corrections_b = Column(JSON)
-    # Gemini-improved answers
-    gemini_improved_answer_taskA = Column(String)
-    gemini_improved_answer_taskB = Column(String)
+    # AI-improved answers
+    ai_improved_answer_taskA = Column(String)
+    ai_improved_answer_taskB = Column(String)
     created_at = Column(DateTime, default=datetime.datetime.now(tz=EST5EDT()))
     user = relationship("User", back_populates="submissions")
 

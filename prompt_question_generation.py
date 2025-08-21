@@ -14,12 +14,12 @@ Task A requirements:
 *Strictly adhere to the following output format*
 
 Output format:
-1. **Type de document**: le début d’un article de presse (rubrique faits-divers)
-2. **Objectif**: écrire la suite de l’article (80 mots minimum)
-3. **Consignes**:
+1. Type de document: le début d’un article de presse (rubrique faits-divers)
+2. Objectif: écrire la suite de l’article (80 mots minimum)
+3. Consignes:
    - Terminez l’article en ajoutant à la suite un texte de 80 mots minimum.
    - Rédigez en plusieurs paragraphes.
-4. **Début de l’article**: Provide 2–3 sentences of an engaging but incomplete news story in French (fait divers style). The story should stop abruptly to allow continuation by the candidate.
+4. Début de l’article: Provide 2–3 sentences of an engaging but incomplete news story in French (fait divers style). The story should stop abruptly to allow continuation by the candidate.
 
 Constraints:
 - The article beginning must be simple, clear, and realistic.
@@ -47,13 +47,13 @@ Task B requirements:
 *Strictly adhere to the following output format*
 
 Output format:
-1. **Type de document**: specify the context (e.g., "une phrase extraite d’un journal", "une annonce officielle", "une lettre reçue", etc.).
-2. **Objectif**: préciser la tâche (e.g., "écrire une lettre formelle pour exprimer votre point de vue", "écrire une lettre de réclamation", etc.).
-3. **Consignes**:
+1. Type de document: specify the context (e.g., "une phrase extraite d’un journal", "une annonce officielle", "une lettre reçue", etc.).
+2. Objectif: préciser la tâche (e.g., "écrire une lettre formelle pour exprimer votre point de vue", "écrire une lettre de réclamation", etc.).
+3. Consignes:
    - Minimum 200 mots.
    - Développez vos arguments en plusieurs paragraphes (au moins 2–3).
    - Utilisez un style formel et respectueux, avec des formules de politesse.
-4. **Situation de départ**: Provide either 
+4. Situation de départ: Provide either 
    - a quotation (extrait d’un journal ou article), OR  
    - a short scenario (e.g., you received a notice, invitation, official communication).  
 
