@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>L'Atelier - TEF Results &amp; AI Feedback</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#007165",
+                        "background": "#f8f9fa",
+                        "surface-tint": "#4c56af",
+                        "outline": "#767683",
+                        "on-secondary-fixed-variant": "#005048",
+                        "secondary": "#006b5f",
+                        "primary-fixed": "#e0e0ff",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#00201c",
+                        "on-primary-container": "#8690ee",
+                        "on-background": "#191c1d",
+                        "outline-variant": "#c6c5d4",
+                        "on-tertiary-fixed-variant": "#604100",
+                        "surface": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-container": "#c98c00",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#000767",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed-dim": "#ffba38",
+                        "on-tertiary-fixed": "#281900",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#454652",
+                        "surface-container": "#edeeef",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#bdc2ff",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-fixed-dim": "#70d8c8",
+                        "tertiary": "#271800",
+                        "secondary-fixed": "#8df5e4",
+                        "tertiary-fixed": "#ffdeac",
+                        "secondary-container": "#8df5e4",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#422c00",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary-fixed-variant": "#343d96",
+                        "on-surface": "#191c1d",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "surface-variant": "#e1e3e4",
+                        "primary": "#000666",
+                        "surface-dim": "#d9dadb",
+                        "primary-container": "#1a237e",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #000666 0%, #1a237e 100%);
+        }
+        .canvas-shadow {
+            box-shadow: 0 12px 32px -4px rgba(0, 6, 102, 0.06);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-8 bg-slate-50 dark:bg-slate-900 h-screen w-64 border-r-0 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-2xl font-bold text-indigo-950 dark:text-indigo-100 tracking-wider font-['Manrope']">L'Atelier</h1>
+<p class="text-xs text-slate-500 font-medium mt-1">TEF Preparation</p>
+</div>
+<nav class="flex-1 space-y-1 px-4">
+<a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span>Tableau de bord</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="school">school</span>
+<span>Pratique</span>
+</a>
+<a class="flex items-center px-4 py-3 text-indigo-900 dark:text-indigo-200 border-r-4 border-indigo-900 dark:border-indigo-400 font-bold bg-indigo-50/50 dark:bg-indigo-900/20 rounded-l-lg group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="history">history</span>
+<span>Historique</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span>Paramètres</span>
+</a>
+</nav>
+<div class="px-6 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center space-x-3">
+<img alt="User avatar" class="w-10 h-10 rounded-full object-cover" data-alt="portrait of a focused professional student in a library setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO5LJdBBVd9mdyd6kscc0FL6oZa6NKGSrPXntdoukWc4BE1eIR5CpvheC8SOgSwXsiNxguMG_p0vw81HOOCbVsL1XDokkspDH-g9KAV8k-g9vVXfoF6U6T3MHL5dR3TeWkY2AXjdMGl8bPKZd_eN29-UMZh5ys7MyIXHtZ_TK7oEI-4nSF4Gd2oZF-D1kCwiDTvyrdzCG6t0AKtrR3h5TPCWTNGDD2oa_XHdao_DSQGg4uyFoh0twni-CUXUdnMOd2TKUwYQlfMm0Y"/>
+<div>
+<p class="text-sm font-bold text-indigo-950 dark:text-indigo-100">Jean Dupont</p>
+<p class="text-xs text-slate-400">Étudiant Premium</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-20 flex justify-between items-center px-12 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-[0_12px_32px_-4px_rgba(0,6,102,0.06)]">
+<div class="flex items-center bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-full w-96">
+<span class="material-symbols-outlined text-slate-400 mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full text-slate-600" placeholder="Rechercher une session..." type="text"/>
+</div>
+<div class="flex items-center space-x-6">
+<button class="relative text-slate-600 dark:text-slate-400 hover:text-indigo-700 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-error ring-2 ring-white"></span>
+</button>
+<button class="text-slate-600 dark:text-slate-400 hover:text-indigo-700 transition-all">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<button class="flex items-center space-x-2 bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2 rounded-full text-indigo-900 dark:text-indigo-200 font-bold text-sm">
+<span>Mon Profil</span>
+<span class="material-symbols-outlined text-lg" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-20 p-12 min-h-screen">
+<!-- Header Messaging -->
+<header class="mb-10">
+<h2 class="text-3xl font-headline font-extrabold text-primary tracking-tight mb-2">Excellent progress, Your TEF Readiness is rising</h2>
+<p class="text-on-surface-variant font-body">Detailed AI Feedback for Session: <span class="font-semibold">Expression Écrite - Fait Divers</span></p>
+</header>
+<!-- Score Banner - Asymmetric Layout -->
+<section class="grid grid-cols-12 gap-8 mb-12">
+<div class="col-span-12 lg:col-span-8 primary-gradient rounded-xl p-8 flex flex-col md:flex-row items-center justify-between text-white overflow-hidden relative">
+<div class="relative z-10">
+<span class="text-indigo-200 font-label text-xs tracking-widest uppercase mb-2 block">Score Global</span>
+<div class="flex items-baseline space-x-2">
+<span class="text-7xl font-headline font-extrabold">580</span>
+<span class="text-2xl text-indigo-300 font-medium">/ 700</span>
+</div>
+<div class="mt-6 flex items-center bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 w-fit">
+<span class="material-symbols-outlined text-secondary-fixed mr-2" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-bold text-sm">Status: Pass (Admissible)</span>
+</div>
+</div>
+<div class="mt-8 md:mt-0 relative z-10 flex flex-col items-end">
+<div class="w-48 h-48 relative">
+<!-- Progress Ring Visual -->
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/10" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-secondary-fixed" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="100" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold">Niveau C1</span>
+<span class="text-xs text-indigo-200">Avancé</span>
+</div>
+</div>
+</div>
+<!-- Abstract Texture Decoration -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl"></div>
+<div class="absolute -left-10 -bottom-10 w-48 h-48 bg-indigo-900/40 rounded-full blur-2xl"></div>
+</div>
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low rounded-xl p-8 flex flex-col justify-center">
+<h3 class="font-headline font-bold text-xl mb-4">Focus areas for today</h3>
+<div class="space-y-4">
+<div class="flex items-center space-x-3 text-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="text-on-surface-variant italic">Refine use of "Subjonctif" in arguments</span>
+</div>
+<div class="flex items-center space-x-3 text-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-on-surface-variant italic">Excellent mastery of narrative flow</span>
+</div>
+<div class="flex items-center space-x-3 text-sm">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-on-surface-variant italic">Watch for repetitive connectors (e.g., 'mais')</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights Grid -->
+<div class="grid grid-cols-12 gap-8 mb-12">
+<!-- AI Linguistic Analysis Column -->
+<section class="col-span-12 lg:col-span-8 space-y-6">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-xl font-headline font-bold flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary" data-icon="psychology">psychology</span>
+                        AI Linguistic Analysis
+                    </h3>
+<span class="text-sm text-slate-500">24 patterns identified</span>
+</div>
+<!-- Error/Optimization Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Grammar Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 canvas-shadow border-l-4 border-error">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold">Grammaire</div>
+<span class="text-xs text-slate-400">High Impact</span>
+</div>
+<p class="text-sm font-semibold mb-2">Accord du participe passé</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                            "Les mesures que nous avons <span class="bg-error-container text-error px-1 rounded">prit</span>..." should be <span class="text-secondary font-bold">prises</span>. The direct object "mesures" precedes the verb.
+                        </p>
+</div>
+<!-- Connectors Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 canvas-shadow border-l-4 border-tertiary-fixed-dim">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-tertiary-fixed text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold">Connecteurs</div>
+<span class="text-xs text-slate-400">Repetitive</span>
+</div>
+<p class="text-sm font-semibold mb-2">Richesse Lexicale</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                            You used "Mais" 6 times. Try <span class="text-secondary font-bold italic">"Cependant"</span>, <span class="text-secondary font-bold italic">"Néanmoins"</span> or <span class="text-secondary font-bold italic">"Toutefois"</span> to diversify your register.
+                        </p>
+</div>
+<!-- Logical Flow Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 canvas-shadow border-l-4 border-primary">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-xs font-bold">Cohésion</div>
+<span class="text-xs text-slate-400">Structural</span>
+</div>
+<p class="text-sm font-semibold mb-2">Progression Thématique</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                            Paragraph 2 lacks a clear transition. Consider starting with "En outre" or "De surcroît" to link to your previous point.
+                        </p>
+</div>
+<!-- Optimization Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 canvas-shadow border-l-4 border-secondary">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold">Style</div>
+<span class="text-xs text-slate-400">Optimization</span>
+</div>
+<p class="text-sm font-semibold mb-2">Formules de Politesse</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                            Your ending is functional but slightly casual for a CLB 9 target. Try "Je vous prie d'agréer..." for maximum points.
+                        </p>
+</div>
+</div>
+</section>
+<!-- Road to CLB 9 Tips Column -->
+<section class="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-8">
+<h3 class="text-xl font-headline font-bold mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2 text-secondary" data-icon="trending_up">trending_up</span>
+                    Road to CLB 9
+                </h3>
+<div class="space-y-6">
+<div class="flex space-x-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-primary shadow-sm">1</div>
+<div>
+<p class="text-sm font-bold">Variété Syntaxique</p>
+<p class="text-xs text-on-surface-variant mt-1">Intégrez au moins deux phrases complexes avec le subjonctif ou le conditionnel passé pour démontrer une maîtrise avancée.</p>
+</div>
+</div>
+<div class="flex space-x-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-primary shadow-sm">2</div>
+<div>
+<p class="text-sm font-bold">Précision Vocabulaire</p>
+<p class="text-xs text-on-surface-variant mt-1">Remplacez les verbes génériques comme "faire" ou "dire" par des verbes d'action plus précis (ex: "préconiser", "instaurer").</p>
+</div>
+</div>
+<div class="flex space-x-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-primary shadow-sm">3</div>
+<div>
+<p class="text-sm font-bold">Structure Narrative</p>
+<p class="text-xs text-on-surface-variant mt-1">Utilisez des expressions de temps variées (ex: "Suite à", "Simultanément", "Dans la foulée de") pour dynamiser votre récit.</p>
+</div>
+</div>
+</div>
+<div class="mt-10 p-6 bg-primary-container rounded-xl text-white relative overflow-hidden">
+<p class="text-sm font-bold relative z-10">Daily French Tip</p>
+<p class="text-xs mt-2 text-indigo-100 relative z-10 leading-relaxed italic">"En revanche" is more formal than "Par contre" for writing exams.</p>
+<span class="material-symbols-outlined absolute -bottom-2 -right-2 text-white/10 text-6xl" data-icon="lightbulb" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+</section>
+</div>
+<!-- Refined Draft Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 canvas-shadow mb-12">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-2xl font-headline font-bold">Refined Draft</h3>
+<p class="text-sm text-on-surface-variant">Compare your original text with the AI-optimized version.</p>
+</div>
+<div class="flex bg-surface-container-low p-1 rounded-lg">
+<button class="px-6 py-2 bg-white rounded-md shadow-sm text-sm font-bold text-primary">Side-by-Side</button>
+<button class="px-6 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Tabbed</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-px bg-outline-variant/20 rounded-xl overflow-hidden">
+<!-- Original Text -->
+<div class="bg-white p-8">
+<div class="flex items-center justify-between mb-6">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Original Text</span>
+<span class="text-xs text-slate-400">Word Count: 142</span>
+</div>
+<div class="space-y-4 text-slate-600 leading-relaxed text-sm">
+<p>Hier matin, un accident s'est produit dans le centre-ville. Une voiture a frappé un vélo à l'intersection. Les gens ont été surpris.</p>
+<p>Le cycliste n'était pas blessé gravement mais il était en colère. <span class="bg-error-container/30 border-b-2 border-error">Les mesures que nous avons prit</span> n'étaient pas suffisantes pour la sécurité. <span class="bg-tertiary-container/20 border-b-2 border-tertiary-fixed-dim">Mais</span> la police est arrivée vite pour aider.</p>
+<p>Il faut changer la circulation ici car c'est dangereux pour tout le monde.</p>
+</div>
+</div>
+<!-- AI Improved Text -->
+<div class="bg-indigo-50/30 p-8 border-l-0 lg:border-l border-outline-variant/20">
+<div class="flex items-center justify-between mb-6">
+<span class="text-xs font-bold text-primary uppercase tracking-widest">AI Improved (CLB 9+)</span>
+<span class="text-xs text-indigo-400">Word Count: 185</span>
+</div>
+<div class="space-y-4 text-indigo-950 leading-relaxed text-sm">
+<p><span class="text-secondary font-bold">Tôt hier matin</span>, une collision <span class="text-secondary font-bold">malheureuse</span> a eu lieu au cœur du centre-ville, impliquant un automobiliste et un cycliste à une intersection fréquentée. Cet événement a provoqué une vive émotion parmi les passants.</p>
+<p>Bien que le cycliste soit fort heureusement indemne, une frustration légitime s'est fait sentir. <span class="text-secondary font-bold">Les mesures que nous avons prises</span> précédemment se sont avérées insuffisantes en matière de sécurité routière. <span class="text-secondary font-bold">Cependant</span>, l'intervention rapide des forces de l'ordre a permis de sécuriser les lieux sans délai.</p>
+<p><span class="text-secondary font-bold">En conclusion, il est impératif de repenser</span> l'aménagement urbain afin de garantir la protection de tous les usagers.</p>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-end space-x-4">
+<button class="px-6 py-3 text-sm font-bold text-primary hover:bg-slate-50 transition-colors rounded-lg flex items-center">
+<span class="material-symbols-outlined mr-2" data-icon="file_download">file_download</span>
+                    Export Analysis
+                </button>
+<button class="px-8 py-3 primary-gradient text-white text-sm font-bold rounded-lg shadow-lg hover:shadow-indigo-900/20 transition-all flex items-center">
+                    Start Next Session
+                    <span class="material-symbols-outlined ml-2" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Floating Progress Indicator (Glassmorphism) -->
+<div class="fixed bottom-8 right-12 z-50 flex items-center space-x-6 glass-effect p-4 rounded-2xl shadow-2xl border border-white/40">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">
+                83%
+            </div>
+<div>
+<p class="text-xs font-bold text-primary">Target: CLB 10</p>
+<div class="w-32 h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+<div class="h-full bg-secondary w-[83%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="h-8 w-px bg-slate-300"></div>
+<div class="flex flex-col items-center">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Session Time</p>
+<p class="text-sm font-bold text-primary">00:42:15</p>
+</div>
+</div>
+</body></html>

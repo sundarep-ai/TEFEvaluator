@@ -1,8 +1,16 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
-*.pyd
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+*.db
+*.db-shm
+*.db-wal
+config.py
 
 # Environment and secrets
 .env
@@ -20,3 +28,7 @@ Thumbs.db
 
 # Database
 *.db
+
+# Node
+node_modules/
+frontend/dist/

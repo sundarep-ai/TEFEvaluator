@@ -6,13 +6,10 @@ import warnings
 warnings.simplefilter("ignore", UserWarning)
 from datetime import datetime, timedelta
 
-import pandas as _pd
 import uvicorn, webbrowser
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
@@ -69,23 +66,6 @@ from prompt_answer_generation import (
 load_dotenv()
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
-
-# Mount static files (CSS and JS)
-app.mount("/static", StaticFiles(directory="."), name="static")
-
-# Serve individual static files at root level
-@app.get("/styles.css")
-async def get_styles():
-    return FileResponse("styles.css", media_type="text/css")
-
-@app.get("/scripts.js")
-async def get_scripts():
-    return FileResponse("scripts.js", media_type="application/javascript")
-
-# Serve favicon.ico to prevent 404 errors
-@app.get("/favicon.ico")
-async def favicon():
-    return FileResponse("favicon.ico")
 
 app.add_middleware(
     CORSMiddleware,
@@ -289,35 +269,37 @@ def extract_feedback_df(response, metrics):
     if not match:
         raise ValueError("No JSON object found in response.text")
     response_json = json.loads(match.group(0))
-    results = {}
+    rows = []
     for metric in metrics:
         data = response_json.get(metric, {})
-        results[metric] = {
+        rows.append({
+            "metric": metric,
             "rating": data.get("rating"),
             "justification": data.get("justification"),
             "original": data.get("original", []),
             "correction": data.get("correction", []),
             "recommendation": data.get("recommendation"),
-        }
-    df = _pd.DataFrame.from_dict(results, orient="index")
-    df.index.name = "metric"
-    df.reset_index(inplace=True)
-    return df
+        })
+    return rows
 
 
-def extract_feedback_summary(df1, df2):
-    rating = float(round((df1.rating.mean() * 0.5 + df2.rating.mean() * 0.5), 2))
-    justification = " ".join(df1.justification.fillna("").tolist()) + " " + " ".join(
-        df2.justification.fillna("").tolist()
-    )
-    recommendation = " ".join(df1.recommendation.fillna("").tolist()) + " " + " ".join(
-        df2.recommendation.fillna("").tolist()
-    )
-    originals = [item for sublist in (df1.original.tolist() + df2.original.tolist()) if sublist for item in sublist]
-    corrections = [
-        item for sublist in (df1.correction.tolist() + df2.correction.tolist()) if sublist for item in sublist
-    ]
-    return rating, justification.strip(), recommendation.strip(), originals, corrections
+def extract_feedback_summary(rows1, rows2):
+    def avg_rating(rows):
+        ratings = [r["rating"] for r in rows if r["rating"] is not None]
+        return sum(ratings) / len(ratings) if ratings else 0.0
+
+    rating = float(round(avg_rating(rows1) * 0.5 + avg_rating(rows2) * 0.5, 2))
+
+    def join_field(rows, field):
+        return " ".join(r[field] or "" for r in rows).strip()
+
+    justification = (join_field(rows1, "justification") + " " + join_field(rows2, "justification")).strip()
+    recommendation = (join_field(rows1, "recommendation") + " " + join_field(rows2, "recommendation")).strip()
+
+    originals = [item for r in rows1 + rows2 for item in (r["original"] or [])]
+    corrections = [item for r in rows1 + rows2 for item in (r["correction"] or [])]
+
+    return rating, justification, recommendation, originals, corrections
 
 
 # =====================
@@ -430,12 +412,6 @@ async def generate_task_b_question(client: genai.Client) -> str:
 # =====================
 # Routes
 # =====================
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    with open("index.html", "r", encoding="utf-8") as f:
-        return HTMLResponse(f.read())
-
-
 @app.get("/api/config")
 async def get_config():
     return {
@@ -795,7 +771,7 @@ async def evaluate_both(
     }
 
 
-@app.post("/generate-improved-answer")
+@app.post("/api/generate-improved-answer")
 async def generate_improved_answer(
     payload: GenerateImprovedAnswerRequest,
     current_user: User = Depends(get_current_user),

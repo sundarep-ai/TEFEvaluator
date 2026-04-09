@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#007165",
+                    "background": "#f8f9fa",
+                    "surface-tint": "#4c56af",
+                    "outline": "#767683",
+                    "on-secondary-fixed-variant": "#005048",
+                    "secondary": "#006b5f",
+                    "primary-fixed": "#e0e0ff",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#00201c",
+                    "on-primary-container": "#8690ee",
+                    "on-background": "#191c1d",
+                    "outline-variant": "#c6c5d4",
+                    "on-tertiary-fixed-variant": "#604100",
+                    "surface": "#f8f9fa",
+                    "surface-container-low": "#f3f4f5",
+                    "on-tertiary-container": "#c98c00",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#000767",
+                    "inverse-on-surface": "#f0f1f2",
+                    "tertiary-fixed-dim": "#ffba38",
+                    "on-tertiary-fixed": "#281900",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#454652",
+                    "surface-container": "#edeeef",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#bdc2ff",
+                    "inverse-surface": "#2e3132",
+                    "surface-container-high": "#e7e8e9",
+                    "surface-container-highest": "#e1e3e4",
+                    "secondary-fixed-dim": "#70d8c8",
+                    "tertiary": "#271800",
+                    "secondary-fixed": "#8df5e4",
+                    "tertiary-fixed": "#ffdeac",
+                    "secondary-container": "#8df5e4",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#422c00",
+                    "surface-bright": "#f8f9fa",
+                    "on-primary-fixed-variant": "#343d96",
+                    "on-surface": "#191c1d",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "surface-variant": "#e1e3e4",
+                    "primary": "#000666",
+                    "surface-dim": "#d9dadb",
+                    "primary-container": "#1a237e",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .academic-gradient {
+            background: linear-gradient(135deg, #000666 0%, #1a237e 100%);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-8 bg-slate-50 dark:bg-slate-900 h-screen w-64 border-r-0 z-50">
+<div class="px-8 mb-12">
+<h1 class="text-2xl font-bold text-indigo-950 dark:text-indigo-100 tracking-wider font-headline">L'Atelier</h1>
+<p class="text-xs font-headline font-bold tracking-tight text-indigo-900 dark:text-indigo-300 opacity-60">TEF Preparation</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active: Tableau de bord -->
+<a class="flex items-center px-8 py-4 text-indigo-900 dark:text-indigo-200 border-r-4 border-indigo-900 dark:border-indigo-400 font-bold bg-indigo-50/50 dark:bg-indigo-900/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="dashboard">dashboard</span>
+<span class="font-headline font-bold tracking-tight">Tableau de bord</span>
+</a>
+<a class="flex items-center px-8 py-4 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="school">school</span>
+<span class="font-headline font-bold tracking-tight">Pratique</span>
+</a>
+<a class="flex items-center px-8 py-4 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="history">history</span>
+<span class="font-headline font-bold tracking-tight">Historique</span>
+</a>
+<a class="flex items-center px-8 py-4 text-slate-500 dark:text-slate-400 font-medium hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="settings">settings</span>
+<span class="font-headline font-bold tracking-tight">Paramètres</span>
+</a>
+</nav>
+<div class="px-8 mt-auto">
+<div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50">
+<div class="flex items-center space-x-3">
+<img alt="User avatar" class="w-10 h-10 rounded-full object-cover" data-alt="Close-up portrait of a professional man in a clean studio setting with soft natural lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTdR6ZMaY4wzPJjWqMoM-mgVUf7NAa0PChxtUO7Q3SMdP4UXV-B0liNX1kKufO-6gWPv6cm2CZPW6h11K8Py1sMuOVDq54wKYWodRIGDny0GLe-fl5TJ2sjpcr0iyFkkVSeaR-nys8fPGHr8kwakK5AEW2z7hWNoi7iz82ZCxYwrBg3tcnUj6sbk_ciEyYZwd6YE7ReAA7x9ZgrziBlWuMe-wo0P6swSithhPDl1mCR2RQTurWtApHCTk_78mQrDKHFlvH31O23iXV"/>
+<div>
+<p class="text-sm font-bold text-indigo-950 dark:text-indigo-100">Julien Morel</p>
+<p class="text-[10px] text-slate-500">Étudiant Premium</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 left-64 h-20 flex justify-between items-center px-12 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-[0_12px_32px_-4px_rgba(0,6,102,0.06)]">
+<div class="flex items-center bg-slate-50 dark:bg-slate-900 rounded-full px-4 py-2 w-96">
+<span class="material-symbols-outlined text-slate-400 mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full font-body text-slate-600" placeholder="Rechercher une leçon ou un test..." type="text"/>
+</div>
+<div class="flex items-center space-x-6">
+<button class="relative text-slate-600 dark:text-slate-400 hover:text-indigo-700 dark:hover:text-indigo-200 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-slate-600 dark:text-slate-400 hover:text-indigo-700 dark:hover:text-indigo-200 transition-all">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/20"></div>
+<button class="flex items-center space-x-3 text-indigo-900 font-bold hover:text-indigo-700 transition-all font-body text-sm">
+<span>Mon Profil</span>
+<div class="w-8 h-8 rounded-full academic-gradient flex items-center justify-center text-white text-xs">JM</div>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 mt-20 p-12 max-w-[1600px]">
+<!-- Hero Section -->
+<section class="mb-12">
+<h2 class="text-display-lg font-headline font-extrabold text-primary tracking-tight mb-2 text-4xl">Bienvenue, Julien</h2>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">Prêt à poursuivre votre préparation au TEF ? Vos performances récentes montrent une progression constante vers le niveau C1.</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Major Card: Performance Gauge -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl p-10 shadow-[0_12px_32px_-4px_rgba(0,6,102,0.06)] flex flex-col md:flex-row items-center gap-12">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Custom Progress Gauge -->
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-secondary" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-dasharray="552.9" stroke-dashoffset="121.6" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-4xl font-headline font-extrabold text-primary">78%</span>
+<span class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold">Niveau C1</span>
+</div>
+</div>
+<div class="flex-1 grid grid-cols-2 gap-8">
+<div class="bg-surface-container-low p-6 rounded-lg">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold mb-2">Classement</p>
+<p class="text-3xl font-headline font-bold text-primary">#14</p>
+<p class="text-xs text-secondary font-medium mt-1">Top 5% mondial</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold mb-2">Modules Complétés</p>
+<p class="text-3xl font-headline font-bold text-primary">24/30</p>
+<div class="w-full bg-outline-variant/20 h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary h-full" style="width: 80%"></div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold mb-2">Précision Moyenne</p>
+<p class="text-3xl font-headline font-bold text-primary">82.4%</p>
+<p class="text-xs text-on-surface-variant mt-1">+2.1% cette semaine</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold mb-2">Temps d'Étude</p>
+<p class="text-3xl font-headline font-bold text-primary">128h</p>
+<p class="text-xs text-on-surface-variant mt-1">Objectif: 150h</p>
+</div>
+</div>
+</div>
+<!-- Spotlight Card: Latest Submission -->
+<div class="col-span-12 lg:col-span-4 academic-gradient rounded-xl p-8 text-white flex flex-col justify-between overflow-hidden relative">
+<div class="relative z-10">
+<div class="bg-white/20 backdrop-blur-md rounded-full px-4 py-1 inline-block mb-6">
+<span class="text-[10px] font-bold uppercase tracking-wider">Dernière Soumission</span>
+</div>
+<h3 class="text-2xl font-headline font-bold mb-2">Essai Argumentatif</h3>
+<p class="text-indigo-200 text-sm leading-relaxed mb-6">Sujet: "L'impact du télétravail sur la cohésion sociale en France."</p>
+<div class="flex items-end space-x-2">
+<span class="text-5xl font-headline font-extrabold">540</span>
+<span class="text-xl text-indigo-300 font-medium mb-1">/ 700</span>
+</div>
+</div>
+<button class="relative z-10 mt-8 bg-white text-primary font-bold py-3 px-6 rounded-lg hover:bg-indigo-50 transition-colors flex items-center justify-center space-x-2">
+<span>Voir l'analyse détaillée</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Decorative abstract shape -->
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+</div>
+<!-- Detailed History Section -->
+<div class="col-span-12 bg-surface-container-low rounded-xl p-10">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="text-2xl font-headline font-extrabold text-primary mb-1">Historique des Soumissions</h3>
+<p class="text-on-surface-variant text-sm">Suivez vos progrès sur les différentes épreuves</p>
+</div>
+<button class="text-primary font-bold text-sm flex items-center space-x-1 hover:underline">
+<span>Tout voir</span>
+<span class="material-symbols-outlined text-xs" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Submission Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between transition-all hover:translate-x-1">
+<div class="flex items-center space-x-5">
+<div class="w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Compréhension Écrite - Section A</h4>
+<p class="text-xs text-on-surface-variant">14 Octobre 2023 • 35 minutes</p>
+</div>
+</div>
+<div class="flex items-center space-x-12">
+<div class="text-right">
+<p class="text-sm font-label text-on-surface-variant font-bold uppercase tracking-tighter">Précision</p>
+<p class="text-lg font-headline font-bold text-primary">92%</p>
+</div>
+<div class="w-24 text-right">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full">Excellence</span>
+</div>
+</div>
+</div>
+<!-- Submission Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between transition-all hover:translate-x-1">
+<div class="flex items-center space-x-5">
+<div class="w-12 h-12 rounded-lg bg-amber-50 flex items-center justify-center text-tertiary-container">
+<span class="material-symbols-outlined" data-icon="hearing">hearing</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Compréhension Orale - Podcast Radio</h4>
+<p class="text-xs text-on-surface-variant">12 Octobre 2023 • 20 minutes</p>
+</div>
+</div>
+<div class="flex items-center space-x-12">
+<div class="text-right">
+<p class="text-sm font-label text-on-surface-variant font-bold uppercase tracking-tighter">Précision</p>
+<p class="text-lg font-headline font-bold text-primary">68%</p>
+</div>
+<div class="w-24 text-right">
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-xs font-bold rounded-full">À améliorer</span>
+</div>
+</div>
+</div>
+<!-- Submission Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between transition-all hover:translate-x-1">
+<div class="flex items-center space-x-5">
+<div class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="record_voice_over">record_voice_over</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Expression Orale - Argumentation</h4>
+<p class="text-xs text-on-surface-variant">09 Octobre 2023 • 15 minutes</p>
+</div>
+</div>
+<div class="flex items-center space-x-12">
+<div class="text-right">
+<p class="text-sm font-label text-on-surface-variant font-bold uppercase tracking-tighter">Précision</p>
+<p class="text-lg font-headline font-bold text-primary">85%</p>
+</div>
+<div class="w-24 text-right">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full">Avancé</span>
+</div>
+</div>
+</div>
+<!-- Submission Item 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between transition-all hover:translate-x-1 opacity-60">
+<div class="flex items-center space-x-5">
+<div class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Expression Écrite - Fait Divers</h4>
+<p class="text-xs text-on-surface-variant">05 Octobre 2023 • 45 minutes</p>
+</div>
+</div>
+<div class="flex items-center space-x-12">
+<div class="text-right">
+<p class="text-sm font-label text-on-surface-variant font-bold uppercase tracking-tighter">Précision</p>
+<p class="text-lg font-headline font-bold text-primary">74%</p>
+</div>
+<div class="w-24 text-right">
+<span class="px-3 py-1 bg-slate-200 text-slate-600 text-xs font-bold rounded-full">Intermédiaire</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Action Area -->
+<footer class="mt-16 flex items-center justify-between border-t border-outline-variant/10 pt-8">
+<div class="flex items-center space-x-8 text-sm text-on-surface-variant font-medium">
+<a class="hover:text-primary" href="#">Conditions d'utilisation</a>
+<a class="hover:text-primary" href="#">Centre d'aide</a>
+<a class="hover:text-primary" href="#">Feedback</a>
+</div>
+<p class="text-xs text-on-surface-variant italic">© 2023 L'Atelier - Excellence en Français</p>
+</footer>
+</main>
+<!-- FAB Action (Contextual for Dashboard) -->
+<button class="fixed bottom-10 right-10 academic-gradient text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform active:scale-95 group z-50">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform" data-icon="add_task" style="font-variation-settings: 'FILL' 1;">add_task</span>
+<div class="absolute right-20 bg-primary-container text-white px-4 py-2 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            Nouveau Test
+        </div>
+</button>
+</body></html>

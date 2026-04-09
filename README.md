@@ -1,253 +1,250 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/TEF%20AI%20Practice%20Tool-Writin## How to Use (v1.2.0)">
+  <img src="https://img.shields.io/badge/L'Atelier-TEF%20Prep%20Studio-000666?style=flat-square">
   <br>
   <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&style=flat-square">
   <img src="https://img.shields.io/badge/FastAPI-0.111.0-green?logo=fastapi&style=flat-square">
-  <img src="https://img.shields.io/badge/Bootstrap-5.3.3-purple?logo=bootstrap&style=flat-square">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&style=flat-square">
+  <img src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&style=flat-square">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-3-38BDF8?logo=tailwindcss&style=flat-square">
   <img src="https://img.shields.io/badge/Gemini%20LLM-2.5%20Pro/Flash-orange?logo=googlecloud&style=flat-square">
   <br><br>
-   <h1>📝 TEF AI Practice Tool v1.2.0</h1>
-  <p>A professional, responsive web app for practicing the <b>TEF Canada Writing</b> module, powered by Google Gemini 2.5 LLMs.<br><i>Fast, modern, and ready for your next exam.</i></p>  
+  <h1>L'Atelier — TEF AI Practice Tool v1.3.0</h1>
+  <p>A professional, responsive web application for practicing the <b>TEF Canada Writing</b> module,<br>powered by Google Gemini 2.5 LLMs and built with React + Vite + Tailwind CSS.</p>
 </div>
 
+---
 
-## 🚀 Features
+## Features
 
-<ul>
-  <li><b>Authentication</b>: Secure login/registration with bcrypt password hashing and JWT tokens</li>
-  <li><b>User Dashboard</b>: Complete submission history with scores, feedback, and performance tracking</li>
-  <li><b>AI Question Generation</b>: Generate authentic TEF Canada-style prompts for both Task A and Task B</li>
-  <li><b>Smart Writing Interface</b>: 60-minute timer, real-time word counts, and easy to write UI</li>
-  <li><b>Advanced AI Evaluation</b>: Two independent AI evaluations, combined with a judge consolidation for accurate scoring</li>
-  <li><b>Detailed Feedback</b>: Comprehensive analysis with error corrections and actionable improvement recommendations</li>
-  <li><b>Improved Answer</b>: Takes in your responses to both the tasks and provides an improved answer
-  <li><b>Dark/Light Theme</b>: Modern responsive UI with persistent theme preferences</li>
-  <li><b>Complete TEF Scoring</b>: Final score out of 700 points following official TEF Canada methodology</li>
-</ul>
+- **Authentication** — Secure login/registration with bcrypt password hashing and JWT tokens
+- **AI Question Generation** — Generate authentic TEF Canada-style prompts for Task A and Task B
+- **Smart Writing Interface** — 60-minute countdown timer, real-time word counters, clean editor
+- **Advanced AI Evaluation** — Dual independent evaluators + judge consolidation for accurate scoring
+- **Detailed Feedback** — Comprehensive analysis with error corrections and actionable recommendations
+- **AI-Improved Answers** — Side-by-side comparison of your text vs. the AI-optimized version
+- **Progress Dashboard** — Full submission history with scores, performance gauge, and detailed breakdowns
+- **Dark/Light Theme** — Persistent theme preference with system-preference detection
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Layer      | Technology                                    |
-|------------|-----------------------------------------------|
-| Backend    | Python 3.10+, FastAPI 0.111.0, Google Gemini 2.5 (Pro/Flash) |
-| Frontend   | HTML5, Vanilla JavaScript, Bootstrap 5.3.3   |
-| Database   | SQLite with SQLAlchemy 2.0.23 ORM           |
-| Auth       | JWT tokens (python-jose), bcrypt password hashing |
-| AI Models  | Google Gemini 2.5 Pro/Flash via google-genai |
-| Styling    | Custom CSS with Inter font, dark/light themes |
+| Layer      | Technology                                                    |
+|------------|---------------------------------------------------------------|
+| Backend    | Python 3.10+, FastAPI 0.111.0, Google Gemini 2.5 Pro/Flash  |
+| Frontend   | React 18, Vite 6, Tailwind CSS 3                             |
+| Database   | SQLite with SQLAlchemy 2.0.23 ORM                            |
+| Auth       | JWT (python-jose), bcrypt password hashing                   |
+| Icons      | Material Symbols Outlined                                     |
+| Fonts      | Manrope (headlines), Inter (body)                            |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
-├── run.py                          # FastAPI backend with auth, evaluation endpoints, and database
-├── index.html                      # Single-page application with responsive Bootstrap UI
-├── scripts.js                      # Frontend JavaScript with theme support and API integration
-├── styles.css                      # Custom CSS with dark/light theme variables
-├── config.py                       # Application settings and configuration
-├── model.py                        # Pydantic schemas and SQLAlchemy database models
-├── prompt_taskA.py                 # AI evaluation prompts for TEF Task A (narrative continuation)
-├── prompt_taskB.py                 # AI evaluation prompts for TEF Task B (opinion letter)
-├── prompt_question_generation.py   # AI prompts for generating TEF-style questions
-├── prompt_answer_generation.py     # AI prompts for generating TEF-style answers
-├── requirements.txt                # Python dependencies
-├── test_prompts.ipynb              # Jupyter notebook for testing AI evaluation system
-├── test_sample.py                  # Sample questions and responses for testing
-├── test_script.py                  # Standalone evaluation testing script
-├── tef.db                          # SQLite database (auto-created)
-├── favicon.ico                     # Application favicon
-├── .env                            # Secret key and google cloud credentials (you have to create)
-└── tefevaluator-*.json             # Google Cloud service account credentials (you have to create)
+TEFEvaluator/
+├── backend/                            # Python/FastAPI backend
+│   ├── run.py                          # Main FastAPI server & all API endpoints
+│   ├── config.py                       # Application settings
+│   ├── model.py                        # Pydantic schemas & SQLAlchemy ORM models
+│   ├── prompt_taskA.py                 # AI evaluation prompts for Task A
+│   ├── prompt_taskB.py                 # AI evaluation prompts for Task B
+│   ├── prompt_question_generation.py   # AI question generation prompts
+│   ├── prompt_answer_generation.py     # AI answer improvement prompts
+│   ├── requirements.txt                # Python dependencies
+│   └── tests/
+│       ├── test_script.py              # Standalone evaluation testing script
+│       ├── test_sample.py              # Sample questions and test data
+│       ├── test_prompts.ipynb          # Jupyter notebook for prompt testing
+│       └── score_calibration.ipynb     # Score calibration analysis
+│
+├── frontend/                           # React + Vite frontend
+│   ├── public/
+│   │   └── favicon.ico
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── index.js               # API client functions
+│   │   ├── components/
+│   │   │   └── layout/
+│   │   │       ├── AppLayout.jsx       # Main authenticated layout
+│   │   │       ├── Sidebar.jsx         # Fixed left sidebar navigation
+│   │   │       └── TopNav.jsx          # Fixed top navigation bar
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx         # Authentication state & actions
+│   │   │   └── ThemeContext.jsx        # Dark/light theme management
+│   │   ├── pages/
+│   │   │   ├── LoginPage.jsx           # Login & registration page
+│   │   │   ├── DashboardPage.jsx       # Dashboard with stats & history
+│   │   │   ├── SetupPage.jsx           # Practice session setup
+│   │   │   ├── WritingPage.jsx         # Timed writing interface
+│   │   │   └── ResultsPage.jsx         # AI feedback & score results
+│   │   ├── App.jsx                     # Root component with router
+│   │   ├── main.jsx                    # React entry point
+│   │   └── index.css                   # Tailwind CSS directives
+│   ├── index.html                      # Vite HTML entry point
+│   ├── package.json
+│   ├── vite.config.js                  # Vite config with API proxy
+│   ├── tailwind.config.js              # Tailwind theme & colors
+│   └── postcss.config.js
+│
+├── design/                             # Original UI design mockups
+│   ├── login.html / login.png
+│   ├── dashboard.html / dashboard.png
+│   └── ai_feedback.html / ai_feedback.png
+│
+└── README.md
 ```
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
-1. **Install dependencies**
-   ```Command Prompt
-   python -m pip install -r requirements.txt
-   ```
+### Prerequisites
 
-2. **Set up Google Gemini API**
-   - Create a `.env` file in the project root
-   - Add your `.json` file in the project root
-   - Add your Google Service Account Credential:
-   ```env
-   GOOGLE_CLOUD_PROJECT_ID=your-google-cloud-project
-   GOOGLE_CLOUD_LOCATION=your-google-cloud-location
-   GOOGLE_APPLICATION_CREDENTIALS=your-google-service-account-json-filename
-   GOOGLE_GENAI_USE_VERTEXAI=True
+- Python 3.10+
+- Node.js 18+
+- Google Cloud account with Gemini API access
 
-   SECRET_KEY=your-auto-generated-long-password
-   ```
+### 1. Backend Setup
 
-3. **Run the application**
-   ```Command Prompt
-   python run.py
-   or
-   uvicorn main:app --reload --host 0.0.0.0 --port 8000
-   ```
+```bash
+cd backend
 
-4. **Access the application**
-   - Open your browser and go to `http://localhost:8000`
-   - Register a new account and login to keep track of your progress
-   - Start practicing your TEF Canada Writing skills!
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
-> **Note**: The SQLite database (`tef.db`) will be created automatically on first run.
-
----
-
-## 🧑‍💻 Usage (v1.2.0)
-
-1. Login or register
-2. Generate/paste prompts for Task A and B
-3. Write responses; watch timer and word counts
-4. Submit; Task A judge may appear first, then Task B; final score appears
-5. Check Dashboard for historical submissions
-
-Output shown:
-- Judge’s justification and recommendation per task
-- Original → Correction pairs (when provided by the judge)
-- Final score out of 700
-
----
-
-## 🔌 API Endpoints
-
-- GET `/api/config` — Frontend config
-- POST `/api/question` — Generate Task A or B prompt (auth required)
-- POST `/api/evaluate/task-a` — Evaluate Task A (auth required)
-- POST `/api/evaluate/task-b` — Evaluate Task B (auth required)
-- POST `/api/evaluate/both` — Evaluate and persist both tasks (auth required)
-- POST `/api/auth/register` — Register with username/password (hashed)
-- POST `/api/auth/login` — Login to receive JWT (auth required)
-- GET `/api/me` — Current user info (auth required)
-- GET `/api/submissions` — List current user’s submissions (auth required)
-- POST `/api/generate-improved-answer` — Generate improved answers (auth required)
-
-Notes:
-- Use `Authorization: Bearer <token>` with authenticated routes.
-- Passwords are hashed with bcrypt (passlib).
-- Submissions are stored in `tef.db` (SQLite) with judge JSON and scores.
-- Gemini responses are requested with structured schemas; only judge outputs are shown to end users.
-
----
-
-## 🔐 Authentication & Security
-
-- **JWT Token Authentication**: Secure bearer token system with configurable expiration
-- **Password Security**: Bcrypt hashing with salt for all user passwords
-- **Session Management**: 120-minute token expiration (configurable)
-- **Test Account**: Default `testing` / `testing` account created on startup
-- **User Registration**: Secure new account creation with validation
-
-**Configuration**: See `config.py` for customizing `secret_key`, `jwt_algorithm`, and `access_token_expire_minutes`.
-
----
-
-## 💾 Database Schema
-
-**SQLite Database**: `tef.db` (auto-created on first run)
-
-### Tables
-
-#### Users
-```sql
-users(
-  id INTEGER PRIMARY KEY,
-  username VARCHAR(64) UNIQUE,
-  hashed_password VARCHAR(255),
-  created_at DATETIME
-)
-```
-
-#### Submissions
-```sql
-submissions(
-  id INTEGER PRIMARY KEY,
-  user_id INTEGER FOREIGN KEY,
-  task_a_question TEXT,
-  task_a_response TEXT,
-  task_b_question TEXT,
-  task_b_response TEXT,
-  rating_a FLOAT,
-  rating_b FLOAT,
-  final_score INTEGER,
-  judge_a JSON,
-  judge_b JSON,
-  justification_a TEXT,
-  recommendation_a TEXT,
-  originals_a JSON,
-  corrections_a JSON,
-  justification_b TEXT,
-  recommendation_b TEXT,
-  originals_b JSON,
-  corrections_b JSON,
-  created_at DATETIME
-)
-```
-
-**Features**: Complete evaluation storage with AI feedback, error analysis, and scoring history.
-
----
-
-## 📊 User Dashboard & Analytics
-
-### Submission History
-- **Complete Records**: View all past practice sessions with timestamps
-- **Performance Tracking**: Monitor scores and improvement over time
-- **Detailed Feedback**: Access AI evaluations, corrections, and recommendations
-- **Score Breakdown**: See individual Task A and Task B ratings plus final score
-
-### Features
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Search & Filter**: Find specific submissions quickly
-- **Export Options**: Review detailed feedback for each submission
-- **Progress Visualization**: Track your TEF Canada preparation journey
-
----
-
-## 🧪 Testing & Development
-
-### Test Files
-- `test_prompts.ipynb`: Interactive Jupyter notebook for testing AI evaluation
-- `test_script.py`: Standalone script for evaluation system testing
-- `test_sample.py`: Sample questions and responses for development
-
-### Development Commands
-```powershell
 # Install dependencies
 pip install -r requirements.txt
 
-# Run with auto-reload
-uvicorn main:app --reload
+# Set environment variables (create a .env file)
+cp ../.env.example .env
+# Edit .env with your credentials
 
-# Test the evaluation system
-python test_script.py
+# Run the backend
+python run.py
+# Backend starts at http://127.0.0.1:8000
+```
+
+### 2. Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+# Frontend starts at http://localhost:5173
+```
+
+The Vite dev server proxies all `/api/*` requests to the FastAPI backend at `http://127.0.0.1:8000`.
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the `backend/` directory:
+
+```env
+# Google Cloud / Gemini
+GOOGLE_CLOUD_PROJECT_ID=your-project-id
+GOOGLE_CLOUD_LOCATION=us-central1
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+GOOGLE_GENAI_USE_VERTEXAI=True
+
+# JWT Secret (generate a strong random key)
+SECRET_KEY=your-secret-key-here
 ```
 
 ---
 
-## 🎨 UI/UX Features
+## API Endpoints
 
-### Modern Design
-- **Bootstrap 5.3.3**: Professional, responsive component library
-- **Inter Font**: Clean, readable typography optimized for screens
-- **Custom CSS Variables**: Consistent color palette and spacing
-- **Smooth Animations**: Enhanced user experience with CSS transitions
-
-### Theme Support
-- **Dark/Light Mode**: Toggle between themes with persistent storage
-- **System Preference**: Automatically detects user's preferred color scheme
-- **Accessibility**: High contrast ratios and screen reader support
-- **Mobile Optimized**: Touch-friendly interface for all devices
+| Method | Endpoint                          | Auth | Purpose                                   |
+|--------|-----------------------------------|------|-------------------------------------------|
+| GET    | `/api/config`                     | No   | Frontend configuration                    |
+| POST   | `/api/auth/register`              | No   | User registration                         |
+| POST   | `/api/auth/login`                 | No   | User login, returns JWT                   |
+| GET    | `/api/me`                         | Yes  | Current user info                         |
+| GET    | `/api/submissions`                | Yes  | User's submission history                 |
+| POST   | `/api/question`                   | Yes  | Generate Task A or B question via Gemini  |
+| POST   | `/api/evaluate/task-a`            | Yes  | Evaluate Task A response                  |
+| POST   | `/api/evaluate/task-b`            | Yes  | Evaluate Task B response                  |
+| POST   | `/api/evaluate/both`              | Yes  | Evaluate both tasks, calculate final score |
+| POST   | `/api/generate-improved-answer`   | Yes  | Generate AI-improved version of answer    |
 
 ---
 
-## 📜 License
+## Database Schema
 
-MIT License - feel free to use this project for your TEF Canada preparation!
+**Users**
+
+| Column            | Type    | Description               |
+|-------------------|---------|---------------------------|
+| id                | INTEGER | Primary key               |
+| username          | VARCHAR | Unique username            |
+| hashed_password   | VARCHAR | bcrypt hashed password    |
+| created_at        | DATETIME| Account creation time     |
+
+**Submissions**
+
+| Column                   | Type    | Description                          |
+|--------------------------|---------|--------------------------------------|
+| id                       | INTEGER | Primary key                          |
+| user_id                  | INTEGER | Foreign key → Users                  |
+| task_a_question          | TEXT    | Task A prompt                        |
+| task_a_response          | TEXT    | User's Task A response               |
+| task_b_question          | TEXT    | Task B prompt                        |
+| task_b_response          | TEXT    | User's Task B response               |
+| rating_a / rating_b      | FLOAT   | Average AI rating (1-5)              |
+| final_score              | INTEGER | Final TEF score (150–700)            |
+| justification_a/b        | TEXT    | AI analysis justification            |
+| recommendation_a/b       | TEXT    | AI improvement recommendation        |
+| originals_a/b            | JSON    | Error originals array                |
+| corrections_a/b          | JSON    | Corrected versions array             |
+| ai_improved_answer_taskA/B | TEXT  | AI-optimized version of response     |
+| created_at               | DATETIME| Submission timestamp                 |
+
+---
+
+## Evaluation System
+
+1. **Dual Evaluators** — Two independent Gemini 2.5 Pro evaluations per task (encouraging + critical)
+2. **Score Consolidation** — Ratings averaged (50/50 weight), feedback merged
+3. **Judge Pass** — Third Gemini call consolidates justifications and corrections
+4. **Final Score** — Exponential curve: `150 + ((normalized²) × 550)`, weighted 40% Task A + 60% Task B
+
+---
+
+## Scoring Scale
+
+| Score Range | Level        | Label            |
+|-------------|--------------|------------------|
+| 600 – 700   | C2           | Excellence       |
+| 500 – 600   | C1           | Avancé           |
+| 400 – 500   | B2           | Intermédiaire+   |
+| 150 – 400   | B1 and below | En progression   |
+
+---
+
+## Running Tests
+
+```bash
+cd backend
+
+# Run evaluation test script
+python tests/test_script.py
+
+# Open Jupyter notebooks for analysis
+jupyter notebook tests/test_prompts.ipynb
+jupyter notebook tests/score_calibration.ipynb
+```
+
+---
+
+<div align="center">
+  <p>Powered by Google Gemini 2.5 Pro &nbsp;•&nbsp; © 2025 L'Atelier — Excellence en Français</p>
+</div>
