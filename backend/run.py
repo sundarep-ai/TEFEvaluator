@@ -16,9 +16,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Literal, Optional
 
-from google import genai
-from google.genai import types
 import os
+from ai_client import DEFAULT_MODELS, UnifiedAIClient
 
 from config import settings
 from model import (
@@ -160,11 +159,40 @@ def on_startup():
 
 
 # =====================
-# Gemini client
+# AI Client Dependency
 # =====================
-client = genai.Client()
-model_pro = settings.ai_model_pro
-model_flash = settings.ai_model_fast
+def _env_key_for(provider: str) -> str:
+    """Return the environment-variable API key for the given provider."""
+    return os.getenv(
+        {"google": "GOOGLE_API_KEY", "openai": "OPENAI_API_KEY",
+         "anthropic": "ANTHROPIC_API_KEY", "openrouter": "OPENROUTER_API_KEY"}.get(provider, ""),
+        "",
+    )
+
+
+def get_ai_client(request: Request) -> UnifiedAIClient:
+    """FastAPI dependency: builds an UnifiedAIClient from per-request headers,
+    falling back to environment variables and application defaults."""
+    provider = (
+        request.headers.get("X-AI-Provider")
+        or os.getenv("AI_PROVIDER", settings.ai_provider)
+    )
+    api_key = request.headers.get("X-AI-Key") or _env_key_for(provider)
+    model = (
+        request.headers.get("X-AI-Model")
+        or DEFAULT_MODELS.get(provider, settings.ai_model_pro)
+    )
+    if not api_key:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"No API key found for provider '{provider}'. "
+                "Pass the X-AI-Key header from the UI or set the corresponding "
+                "environment variable (GOOGLE_API_KEY / OPENAI_API_KEY / "
+                "ANTHROPIC_API_KEY / OPENROUTER_API_KEY)."
+            ),
+        )
+    return UnifiedAIClient(provider=provider, api_key=api_key, model=model)
 
 
 # =====================
@@ -378,36 +406,20 @@ def exponential_score(avg_rating, p=P):
 # =====================
 # Question Generation (inlined)
 # =====================
-async def generate_task_a_question(client: genai.Client) -> str:
-    """Generate a single Task A (narrative continuation) question using Gemini."""
-    task_a_system = ques_system_instruction_taskA
-    task_a_content = ques_taskA_prompt
-    resp = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=task_a_system,
-            response_mime_type="text/plain",
-        ),
-        contents=task_a_content,
-    )
-    text = getattr(resp, "text", "").strip()
-    return text
+async def generate_task_a_question(ai_client: UnifiedAIClient) -> str:
+    """Generate a single Task A (narrative continuation) question."""
+    return ai_client.generate_text(
+        system=ques_system_instruction_taskA,
+        content=ques_taskA_prompt,
+    ).text
 
 
-async def generate_task_b_question(client: genai.Client) -> str:
-    """Generate a single Task B (opinion/argumentative letter) question using Gemini."""
-    task_b_system = ques_system_instruction_taskB
-    task_b_content = ques_taskB_prompt
-    resp = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=task_b_system,
-            response_mime_type="text/plain",
-        ),
-        contents=task_b_content,
-    )
-    text = getattr(resp, "text", "").strip()
-    return text
+async def generate_task_b_question(ai_client: UnifiedAIClient) -> str:
+    """Generate a single Task B (opinion/argumentative letter) question."""
+    return ai_client.generate_text(
+        system=ques_system_instruction_taskB,
+        content=ques_taskB_prompt,
+    ).text
 
 # =====================
 # Routes
@@ -488,19 +500,22 @@ def list_submissions(current_user: User = Depends(get_current_user), db: Session
 
 @app.post("/api/question")
 async def generate_question(
-    payload: GenerateQuestionRequest, current_user: User = Depends(get_current_user)
+    payload: GenerateQuestionRequest,
+    current_user: User = Depends(get_current_user),
+    ai_client: UnifiedAIClient = Depends(get_ai_client),
 ):
-    # AI-generated questions using Gemini
     if payload.task == "A":
-        question = await generate_task_a_question(client)
+        question = await generate_task_a_question(ai_client)
     else:
-        question = await generate_task_b_question(client)
+        question = await generate_task_b_question(ai_client)
     return {"question": question}
 
 
 @app.post("/api/evaluate/task-a")
 async def evaluate_task_a(
-    payload: EvaluateTaskARequest, current_user: User = Depends(get_current_user)
+    payload: EvaluateTaskARequest,
+    current_user: User = Depends(get_current_user),
+    ai_client: UnifiedAIClient = Depends(get_ai_client),
 ):
     # Build Task A eval prompts
     word_count_taskA = len(payload.task_a_response.split())
@@ -516,23 +531,15 @@ async def evaluate_task_a(
     )
 
     # Call Gemini for Task A
-    resp_eval1_A = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval1_system_instruction_taskA,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskA,
-        ),
-        contents=taskA_content_eval1,
+    resp_eval1_A = ai_client.generate_json(
+        system=eval1_system_instruction_taskA,
+        content=taskA_content_eval1,
+        schema=output_schema_taskA,
     )
-    resp_eval2_A = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval2_system_instruction_taskA,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskA,
-        ),
-        contents=taskA_content_eval2,
+    resp_eval2_A = ai_client.generate_json(
+        system=eval2_system_instruction_taskA,
+        content=taskA_content_eval2,
+        schema=output_schema_taskA,
     )
 
     # Parse Task A
@@ -549,14 +556,10 @@ async def evaluate_task_a(
         originals=originals_A,
         corrections=corrections_A,
     )
-    resp_judge_A = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=judge_system_instruction_taskA,
-            response_mime_type="application/json",
-            response_schema=judge_output_schema,
-        ),
-        contents=taskA_judge_content,
+    resp_judge_A = ai_client.generate_json(
+        system=judge_system_instruction_taskA,
+        content=taskA_judge_content,
+        schema=judge_output_schema,
     )
 
     return {
@@ -567,7 +570,9 @@ async def evaluate_task_a(
 
 @app.post("/api/evaluate/task-b")
 async def evaluate_task_b(
-    payload: EvaluateTaskBRequest, current_user: User = Depends(get_current_user)
+    payload: EvaluateTaskBRequest,
+    current_user: User = Depends(get_current_user),
+    ai_client: UnifiedAIClient = Depends(get_ai_client),
 ):
     # Build Task B eval prompts
     word_count_taskB = len(payload.task_b_response.split())
@@ -581,23 +586,15 @@ async def evaluate_task_b(
         response=payload.task_b_response,
         word_count=word_count_taskB,
     )
-    resp_eval1_B = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval1_system_instruction_taskB,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskB,
-        ),
-        contents=taskB_content_eval1,
+    resp_eval1_B = ai_client.generate_json(
+        system=eval1_system_instruction_taskB,
+        content=taskB_content_eval1,
+        schema=output_schema_taskB,
     )
-    resp_eval2_B = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval2_system_instruction_taskB,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskB,
-        ),
-        contents=taskB_content_eval2,
+    resp_eval2_B = ai_client.generate_json(
+        system=eval2_system_instruction_taskB,
+        content=taskB_content_eval2,
+        schema=output_schema_taskB,
     )
     df1B = extract_feedback_df(resp_eval1_B, metrics_taskB)
     df2B = extract_feedback_df(resp_eval2_B, metrics_taskB)
@@ -610,14 +607,10 @@ async def evaluate_task_b(
         originals=originals_B,
         corrections=corrections_B,
     )
-    resp_judge_B = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=judge_system_instruction_taskB,
-            response_mime_type="application/json",
-            response_schema=judge_output_schema,
-        ),
-        contents=taskB_judge_content,
+    resp_judge_B = ai_client.generate_json(
+        system=judge_system_instruction_taskB,
+        content=taskB_judge_content,
+        schema=judge_output_schema,
     )
     return {
         "judge": json.loads(re.search(r"\{.*\}", resp_judge_B.text, re.DOTALL).group(0)),
@@ -630,6 +623,7 @@ async def evaluate_both(
     payload: EvaluateBothRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
+    ai_client: UnifiedAIClient = Depends(get_ai_client),
 ):
     # Task A
     word_count_taskA = len(payload.task_a_response.split())
@@ -643,23 +637,15 @@ async def evaluate_both(
         response=payload.task_a_response,
         word_count=word_count_taskA,
     )
-    resp_eval1_A = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval1_system_instruction_taskA,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskA,
-        ),
-        contents=taskA_content_eval1,
+    resp_eval1_A = ai_client.generate_json(
+        system=eval1_system_instruction_taskA,
+        content=taskA_content_eval1,
+        schema=output_schema_taskA,
     )
-    resp_eval2_A = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval2_system_instruction_taskA,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskA,
-        ),
-        contents=taskA_content_eval2,
+    resp_eval2_A = ai_client.generate_json(
+        system=eval2_system_instruction_taskA,
+        content=taskA_content_eval2,
+        schema=output_schema_taskA,
     )
     df1A = extract_feedback_df(resp_eval1_A, metrics_taskA)
     df2A = extract_feedback_df(resp_eval2_A, metrics_taskA)
@@ -672,14 +658,10 @@ async def evaluate_both(
         originals=originals_A,
         corrections=corrections_A,
     )
-    resp_judge_A = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=judge_system_instruction_taskA,
-            response_mime_type="application/json",
-            response_schema=judge_output_schema,
-        ),
-        contents=taskA_judge_content,
+    resp_judge_A = ai_client.generate_json(
+        system=judge_system_instruction_taskA,
+        content=taskA_judge_content,
+        schema=judge_output_schema,
     )
     judge_A = json.loads(re.search(r"\{.*\}", resp_judge_A.text, re.DOTALL).group(0))
 
@@ -695,23 +677,15 @@ async def evaluate_both(
         response=payload.task_b_response,
         word_count=word_count_taskB,
     )
-    resp_eval1_B = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval1_system_instruction_taskB,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskB,
-        ),
-        contents=taskB_content_eval1,
+    resp_eval1_B = ai_client.generate_json(
+        system=eval1_system_instruction_taskB,
+        content=taskB_content_eval1,
+        schema=output_schema_taskB,
     )
-    resp_eval2_B = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=eval2_system_instruction_taskB,
-            response_mime_type="application/json",
-            response_schema=output_schema_taskB,
-        ),
-        contents=taskB_content_eval2,
+    resp_eval2_B = ai_client.generate_json(
+        system=eval2_system_instruction_taskB,
+        content=taskB_content_eval2,
+        schema=output_schema_taskB,
     )
     df1B = extract_feedback_df(resp_eval1_B, metrics_taskB)
     df2B = extract_feedback_df(resp_eval2_B, metrics_taskB)
@@ -724,14 +698,10 @@ async def evaluate_both(
         originals=originals_B,
         corrections=corrections_B,
     )
-    resp_judge_B = client.models.generate_content(
-        model=model_pro,
-        config=types.GenerateContentConfig(
-            system_instruction=judge_system_instruction_taskB,
-            response_mime_type="application/json",
-            response_schema=judge_output_schema,
-        ),
-        contents=taskB_judge_content,
+    resp_judge_B = ai_client.generate_json(
+        system=judge_system_instruction_taskB,
+        content=taskB_judge_content,
+        schema=judge_output_schema,
     )
     judge_B = json.loads(re.search(r"\{.*\}", resp_judge_B.text, re.DOTALL).group(0))
 
@@ -776,6 +746,7 @@ async def generate_improved_answer(
     payload: GenerateImprovedAnswerRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
+    ai_client: UnifiedAIClient = Depends(get_ai_client),
 ):
     """Generate an improved version of the user's answer using Gemini AI."""
     
@@ -791,17 +762,11 @@ async def generate_improved_answer(
     formatted_prompt = prompt_template.format(user_answer=payload.userAnswer)
     
     try:
-        # Call Gemini to generate improved answer
-        resp = client.models.generate_content(
-            model=model_pro,
-            config=types.GenerateContentConfig(
-                system_instruction=system_instruction,
-                response_mime_type="text/plain",
-            ),
-            contents=formatted_prompt,
+        resp = ai_client.generate_text(
+            system=system_instruction,
+            content=formatted_prompt,
         )
-        
-        improved_answer = getattr(resp, "text", "").strip()
+        improved_answer = resp.text
         
         if not improved_answer:
             raise HTTPException(

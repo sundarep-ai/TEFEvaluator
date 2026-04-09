@@ -5,6 +5,18 @@ function authHeader() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+/** Returns AI provider headers from localStorage, if configured. */
+function aiConfigHeaders() {
+  const provider = localStorage.getItem('ai_provider');
+  const apiKey  = localStorage.getItem('ai_api_key');
+  const model   = localStorage.getItem('ai_model');
+  const headers = {};
+  if (provider) headers['X-AI-Provider'] = provider;
+  if (apiKey)   headers['X-AI-Key']      = apiKey;
+  if (model)    headers['X-AI-Model']    = model;
+  return headers;
+}
+
 async function apiGet(path) {
   const res = await fetch(`${BASE}${path}`, {
     headers: { ...authHeader() },
@@ -19,7 +31,7 @@ async function apiGet(path) {
 async function apiPost(path, body) {
   const res = await fetch(`${BASE}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeader() },
+    headers: { 'Content-Type': 'application/json', ...authHeader(), ...aiConfigHeaders() },
     body: JSON.stringify(body),
   });
   if (!res.ok) {

@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateQuestion } from '../api/index.js';
 
+const PROVIDERS = [
+  { value: 'google',     label: 'Google Gemini',  defaultModel: 'gemini-2.5-pro' },
+  { value: 'openai',     label: 'OpenAI',          defaultModel: 'gpt-4o' },
+  { value: 'anthropic',  label: 'Anthropic',       defaultModel: 'claude-opus-4-6' },
+  { value: 'openrouter', label: 'OpenRouter',      defaultModel: 'openai/gpt-4o' },
+];
+
 export default function SetupPage() {
   const navigate = useNavigate();
   const [taskAQuestion, setTaskAQuestion] = useState('');
@@ -10,6 +17,36 @@ export default function SetupPage() {
   const [loadingB, setLoadingB] = useState(false);
   const [errorA, setErrorA] = useState('');
   const [errorB, setErrorB] = useState('');
+
+  // AI provider settings — persisted in localStorage
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiProvider, setAiProvider] = useState(
+    () => localStorage.getItem('ai_provider') || 'google'
+  );
+  const [aiKey, setAiKey] = useState(
+    () => localStorage.getItem('ai_api_key') || ''
+  );
+  const [aiModel, setAiModel] = useState(
+    () => localStorage.getItem('ai_model') || 'gemini-2.5-pro'
+  );
+
+  const handleProviderChange = (value) => {
+    const defaultModel = PROVIDERS.find((p) => p.value === value)?.defaultModel || '';
+    setAiProvider(value);
+    setAiModel(defaultModel);
+    localStorage.setItem('ai_provider', value);
+    localStorage.setItem('ai_model', defaultModel);
+  };
+
+  const handleKeyChange = (value) => {
+    setAiKey(value);
+    localStorage.setItem('ai_api_key', value);
+  };
+
+  const handleModelChange = (value) => {
+    setAiModel(value);
+    localStorage.setItem('ai_model', value);
+  };
 
   const canBegin = taskAQuestion.trim().length > 0 && taskBQuestion.trim().length > 0;
 
@@ -57,6 +94,74 @@ export default function SetupPage() {
           Générez des questions avec l'IA ou saisissez les vôtres pour les deux tâches d'expression écrite.
         </p>
       </section>
+
+      {/* AI Provider Settings */}
+      <div className="mb-8 bg-surface-container-lowest dark:bg-slate-800 rounded-xl overflow-hidden canvas-shadow">
+        <button
+          onClick={() => setAiOpen((v) => !v)}
+          className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-surface-container-low dark:hover:bg-slate-700 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary text-lg">key</span>
+            <span className="font-semibold text-on-surface dark:text-white text-sm">
+              Configuration du fournisseur IA
+            </span>
+            {aiKey && (
+              <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                {PROVIDERS.find((p) => p.value === aiProvider)?.label ?? aiProvider}
+              </span>
+            )}
+          </div>
+          <span className={`material-symbols-outlined text-on-surface-variant transition-transform ${aiOpen ? 'rotate-180' : ''}`}>
+            expand_more
+          </span>
+        </button>
+
+        {aiOpen && (
+          <div className="px-6 pb-6 pt-2 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-outline-variant/20">
+            {/* Provider */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-on-surface-variant">Fournisseur</label>
+              <select
+                value={aiProvider}
+                onChange={(e) => handleProviderChange(e.target.value)}
+                className="px-3 py-2 bg-surface-container-low dark:bg-slate-700 text-on-surface dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                {PROVIDERS.map((p) => (
+                  <option key={p.value} value={p.value}>{p.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* API Key */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-on-surface-variant">Clé API</label>
+              <input
+                type="password"
+                placeholder="sk-... / AIza... / sk-ant-..."
+                value={aiKey}
+                onChange={(e) => handleKeyChange(e.target.value)}
+                className="px-3 py-2 bg-surface-container-low dark:bg-slate-700 text-on-surface dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-outline/50"
+              />
+            </div>
+
+            {/* Model */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-on-surface-variant">Modèle</label>
+              <input
+                type="text"
+                value={aiModel}
+                onChange={(e) => handleModelChange(e.target.value)}
+                className="px-3 py-2 bg-surface-container-low dark:bg-slate-700 text-on-surface dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+
+            <p className="sm:col-span-3 text-xs text-on-surface-variant">
+              La clé API est stockée uniquement dans votre navigateur (localStorage) et n'est jamais enregistrée sur le serveur.
+            </p>
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {/* Task A */}
