@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Environment and secrets
+.env
+.env.*
+
+# Credential blobs (service-account keys etc.)
+# NOTE: this used to be a bare `*.json`, which silently excluded
+# frontend/package.json — a fresh clone could not `npm install`. `config.py` was
+# excluded for the same reason and holds no secrets (those come from .env), so
+# it is tracked now too.
+*credentials*.json
+*service-account*.json
+gcp-*.json
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+frontend/dist/
